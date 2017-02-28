@@ -151,8 +151,6 @@ public class MainActivity extends GosControlModuleBaseActivity implements
 			}
 			}
 		
-		
-		 
 		initBroadcostData();
 		  
 		init();

@@ -328,7 +328,7 @@ public class GosDeviceListActivity extends GosDeviceModuleBaseActivity implement
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		initsdk();
+		//initsdk();
 		setContentView(R.layout.activity_gos_device_list);
 		Intent intentfalg = getIntent();
 		ismain=intentfalg.getBooleanExtra("ismain", false);
