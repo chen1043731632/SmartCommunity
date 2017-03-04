@@ -1,0 +1,372 @@
+package com.way.tabui.gokit;
+
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.json.JSONException;
+
+import com.gizwits.gizwifisdk.api.GizWifiDevice;
+import com.way.adapter.DatabaseAdapter;
+import com.way.tabui.actity.SmartOCActivity;
+import com.way.tabui.actity.UpdataActivity;
+import com.way.tabui.commonmodule.GosBaseActivity;
+import com.way.util.AirMesinfo;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Service;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Vibrator;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class AirMateActivity extends GosBaseActivity {
+
+	private GizWifiDevice device = null;
+	private DatabaseAdapter dbAdapter;
+	private ImageButton ib_pre, ib_ceshi, ib_next;
+	private TextView tv_pro,tv_brand;
+	private int min, max, brand, index;
+	private String name = "Null";
+	/** 型号代码 */
+	private int sendtype = 131072;// 02 xx xx
+
+	private int OPEN = 327432;
+
+	private int CLOSE = 262152;
+
+	/** 空调命令 */
+	private static final String KEY_Sendair = "Send_aircon";
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_air_mate);
+		setActionBar(true, true,
+				getResources().getString(R.string.title_activity_air_mate)
+						.toString());
+		dbAdapter = new DatabaseAdapter(this);
+		initDevice();
+		initView();
+		initData();
+		initEvent();
+	}
+
+	private void initDevice() {
+
+		Intent intent = getIntent();
+		device = (GizWifiDevice) intent.getParcelableExtra("GizWifiDevice");
+	}
+
+	private void initView() {
+		ib_pre = (ImageButton) findViewById(R.id.ib_pre);
+		ib_next = (ImageButton) findViewById(R.id.ib_next);
+		ib_ceshi = (ImageButton) findViewById(R.id.ib_ceshi);
+
+		tv_pro = (TextView) findViewById(R.id.tv_pro);
+		tv_brand=(TextView)findViewById(R.id.tv_brand);
+		ib_pre.setEnabled(false);
+
+	}
+
+	private void initData() {
+		Intent intent = getIntent();
+		min = intent.getIntExtra("min", 0);
+		max = intent.getIntExtra("max", 1000);
+		name = intent.getStringExtra("name") + "空调";
+		brand = min;
+		index = 1;
+		setProText();
+	}
+
+//	Thread myThread = new Thread(new MyThread());
+
+	private void initEvent() {
+
+		ib_pre.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				if (brand == min) {
+					ib_pre.setEnabled(false);
+				} else {
+					brand--;
+					index--;
+					setProText();
+					ib_next.setEnabled(true);
+				}
+			}
+		});
+
+		ib_next.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (brand == max) {
+					ib_next.setEnabled(false);
+				} else {
+					brand++;
+					index++;
+					setProText();
+					ib_pre.setEnabled(true);
+				}
+			}
+		});
+
+		ib_ceshi.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				boolean isopen = false;
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					isonclick=false;
+					if (!isopen) {
+						
+						isstart=true;
+						initTimer();
+						//myThread.start();
+						Log.i("==", "Thread is start");
+						isopen = true;
+					}
+					break;
+
+				case MotionEvent.ACTION_UP:
+					isonclick=false;
+					isstart=false;
+					initTimer();
+//					myThread.interrupt();
+					isopen = false;
+					windex = 1;
+					boundAlert(AirMateActivity.this);
+					break;
+				}
+
+				return false;
+			}
+		});
+		
+//		ib_ceshi.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				isonclick=true;
+//				isstart=true;
+//				initTimer();
+//			}
+//		});
+		
+	}
+	boolean isonclick;
+	protected void boundAlert(Context context) {
+		String title, message, nbtext, pbtext;
+		title = (String) getText(R.string.prompt);
+		message = "设备有响应么？";
+		nbtext = "否";
+		pbtext = "是";
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(title);
+		builder.setMessage(message);
+		builder.setNegativeButton(nbtext,
+				new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						if (brand != max) {
+							brand++;
+							index++;
+							setProText();
+						} else {
+							ib_next.setEnabled(false);
+						}
+					}
+				});
+		
+		builder.setPositiveButton(pbtext,
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						AirMesinfo airMesinfo = new AirMesinfo(name, brand, 22,
+								0, 0, 0, device.getMacAddress(), "null", 0);
+						dbAdapter.addairmes(airMesinfo);
+						Toast.makeText(getApplicationContext(), "添加完毕",
+								Toast.LENGTH_SHORT).show();
+						Intent intent = new Intent();
+						intent.putExtra("issave", true);
+						setResult(1001, intent);
+						finish();
+					}
+				});
+		builder.show();
+	}
+
+	private void setProText() {
+		int sum;
+		sum = max - min + 1;
+		tv_pro.setText("测试按键（" + index + "/" + sum + ")");
+		tv_brand.setText("当前测试遥控码:"+brand);
+	}
+
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			// 要做的事情
+			switch (msg.what) {
+			case 1:
+				try {
+					sendJson(KEY_Sendair, sendtype + brand);
+					vSimple();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				windex++;
+				break;
+			case 2:
+				try {
+					sendJson(KEY_Sendair, OPEN);
+					
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				windex++;
+				break;
+			case 3:
+				vSimple();
+				try {
+					sendJson(KEY_Sendair, CLOSE);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				windex++;
+				
+//				if(isonclick)
+//					{
+//					isstart=false;
+//					windex = 1;
+//					boundAlert(AirMateActivity.this);
+//					}
+				
+				break;
+				
+			case 4:
+				
+				if (brand != max) {
+					brand++;
+					index++;
+					setProText();
+				} else {
+					ib_next.setEnabled(false);
+				}
+				windex = 1;
+				break;
+			}
+			super.handleMessage(msg);
+		}
+	};
+	
+	int windex = 1;
+
+	boolean isstart=true;
+	
+//	public class MyThread implements Runnable {
+//		@Override
+//		public void run() {
+//			// TODO Auto-generated method stub
+//			while (isstart) {
+//				try {
+//					Thread.sleep(500);// 线程暂停10秒，单位毫秒
+//					Message message = new Message();
+//					message.what = windex;
+//					handler.sendMessage(message);// 发送消息
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					Log.i("==", "线程出错"+e.toString());
+//				}
+//			}
+//		}
+//	}
+	private Thread thread;
+	public void initTimer() {
+
+		thread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				while (isstart) {
+			    	Message mas= new Message();
+				    mas.what=windex;
+					handler.sendMessage(mas);
+					if(windex==3){
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							Log.i("==", "线程出错"+e.toString());
+						}
+				}else{
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						Log.i("==", "线程出错"+e.toString());
+					}
+				}
+				}
+			}
+		});
+		if (isstart) {
+			thread.start();
+		} else {
+			thread.interrupt();
+		}
+
+	}
+
+	private void sendJson(String key, Object value) throws JSONException {
+		ConcurrentHashMap<String, Object> hashMap = new ConcurrentHashMap<String, Object>();
+		hashMap.put(key, value);
+		device.write(hashMap, 0);
+		Log.i("==", hashMap.toString());
+		// Log.i("Apptest", hashMap.toString());
+	}
+
+	private void vSimple() {
+		Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
+		vibrator.vibrate(60);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.finish();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+}
