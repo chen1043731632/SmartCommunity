@@ -32,7 +32,8 @@ import com.property.view.NoScrollListView;
 import com.way.tabui.gokit.R;
 import com.google.gson.Gson;
 
-public class AnnouncementListActivity extends BaseActivity implements OnHeaderRefreshListener, OnFooterLoadListener{
+public class AnnouncementListActivity extends BaseActivity implements
+		OnHeaderRefreshListener, OnFooterLoadListener {
 	@BindView(id = R.id.iv_back, click = true)
 	private ImageView ivBack;
 	@BindView(id = R.id.tv_back, click = true)
@@ -43,7 +44,7 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 	private AbSlidingPlayView abSlidingPlayView;
 	@BindView(id = R.id.noScrollListView)
 	private NoScrollListView noScrollListView;
-	
+
 	private KJHttp http;
 	private Gson gson;
 	private int page_num = 1;
@@ -52,7 +53,7 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 	private AnnouncementListAdapter adapter;
 	private KJBitmap bitmap;
 	private boolean loadmore = false;
-	
+
 	@Override
 	public void setRootView() {
 		setContentView(R.layout.activity_gonggao);
@@ -65,10 +66,12 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 		abPullToRefreshView.setOnHeaderRefreshListener(this);
 		abPullToRefreshView.setOnFooterLoadListener(this);
 		// 设置进度条的样式
-		abPullToRefreshView.getHeaderView()
-				.setHeaderProgressBarDrawable(getApplication().getResources().getDrawable(R.drawable.progress_circular));
-		abPullToRefreshView.getFooterView()
-				.setFooterProgressBarDrawable(getApplication().getResources().getDrawable(R.drawable.progress_circular));
+		abPullToRefreshView.getHeaderView().setHeaderProgressBarDrawable(
+				getApplication().getResources().getDrawable(
+						R.drawable.progress_circular));
+		abPullToRefreshView.getFooterView().setFooterProgressBarDrawable(
+				getApplication().getResources().getDrawable(
+						R.drawable.progress_circular));
 		http = new KJHttp();
 		gson = new Gson();
 		bitmap = new KJBitmap();
@@ -80,11 +83,13 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				startActivity(new Intent(getApplication(),AnnouncementInfoActivity.class).putExtra("aid", list.get(position).getAid()));
+				startActivity(new Intent(getApplication(),
+						AnnouncementInfoActivity.class).putExtra("aid", list
+						.get(position).getAid()));
 			}
 		});
 	}
-	
+
 	@Override
 	public void widgetClick(View v) {
 		super.widgetClick(v);
@@ -98,49 +103,53 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 			break;
 		}
 	}
-	
-	public void sendpost(){
+
+	public void sendpost() {
 		HttpParams params = new HttpParams();
 		params.put("cat_id", 160);
 		params.put("page_num", page_num);
 		params.put("page_size", 20);
-		http.post(UrlConnector.ANNOUNCEMENT_LIST, params, false, new HttpCallBack() {
-			@Override
-			public void onFailure(int errorNo, String strMsg) {
-				super.onFailure(errorNo, strMsg);
-				if (!loadmore) {
-					abPullToRefreshView.onHeaderRefreshFinish();
-				} else {
-					abPullToRefreshView.onFooterLoadFinish();
-				}
-				Toast.makeText(AnnouncementListActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
-			}
-			
-			@Override
-			public void onSuccess(String t) {
-				super.onSuccess(t);
-				announcementListEntity = gson.fromJson(t, AnnouncementListEntity.class);
-				List<list> list1 = announcementListEntity.getList();
-				if(page_num==1){
-					list.clear();
-				}
-				if(list1 != null && list1.size()>0){
-					list.addAll(list1);
-				}
-				adapter.notifyDataSetChanged();
-				noScrollListView.setAdapter(adapter);
-				if(announcementListEntity.getAd_top() != null && announcementListEntity.getAd_top().size() > 0){
-					initLoopPic(announcementListEntity.getAd_top());
-				}
-				if (!loadmore) {
-					abPullToRefreshView.onHeaderRefreshFinish();
-				} else {
-					abPullToRefreshView.onFooterLoadFinish();
-				}
-			}
-		});
+		http.post(UrlConnector.ANNOUNCEMENT_LIST, params, false,
+				new HttpCallBack() {
+					@Override
+					public void onFailure(int errorNo, String strMsg) {
+						super.onFailure(errorNo, strMsg);
+						if (!loadmore) {
+							abPullToRefreshView.onHeaderRefreshFinish();
+						} else {
+							abPullToRefreshView.onFooterLoadFinish();
+						}
+						Toast.makeText(AnnouncementListActivity.this, "请求失败",
+								Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onSuccess(String t) {
+						super.onSuccess(t);
+						announcementListEntity = gson.fromJson(t,
+								AnnouncementListEntity.class);
+						List<list> list1 = announcementListEntity.getList();
+						if (page_num == 1) {
+							list.clear();
+						}
+						if (list1 != null && list1.size() > 0) {
+							list.addAll(list1);
+						}
+						adapter.notifyDataSetChanged();
+						noScrollListView.setAdapter(adapter);
+						if (announcementListEntity.getAd_top() != null
+								&& announcementListEntity.getAd_top().size() > 0) {
+							initLoopPic(announcementListEntity.getAd_top());
+						}
+						if (!loadmore) {
+							abPullToRefreshView.onHeaderRefreshFinish();
+						} else {
+							abPullToRefreshView.onFooterLoadFinish();
+						}
+					}
+				});
 	}
-	
+
 	/**
 	 * 轮播图
 	 * 
@@ -151,13 +160,14 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 		if (list.size() > 0) {
 			for (ad_top galleryModel : list) {
 				try {
-					final View mPlayView = getLayoutInflater()
-							.inflate(R.layout.play_view_item, null);
+					final View mPlayView = getLayoutInflater().inflate(
+							R.layout.play_view_item, null);
 					ImageView mPlayImage = (ImageView) mPlayView
 							.findViewById(R.id.mPlayImage);
-					bitmap.display(mPlayImage, galleryModel.getContent(),
-							1080, 720);
-					LinearLayout llLunbo = (LinearLayout) mPlayView.findViewById(R.id.ll_lunbo);
+					bitmap.display(mPlayImage, galleryModel.getContent(), 1080,
+							720);
+					LinearLayout llLunbo = (LinearLayout) mPlayView
+							.findViewById(R.id.ll_lunbo);
 					llLunbo.setBackgroundResource(R.drawable.lunbo_background);
 					ImageView ivTittle = (ImageView) mPlayView
 							.findViewById(R.id.iv_lunbo_title);
@@ -166,7 +176,8 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 							.findViewById(R.id.mPlayText);
 					mPlayText.setText(galleryModel.getAd_name());
 					abSlidingPlayView.setNavHorizontalGravity(Gravity.RIGHT);
-					abSlidingPlayView.setNavPageResources(R.drawable.lunbo_white, R.drawable.lunbo_gray);
+					abSlidingPlayView.setNavPageResources(
+							R.drawable.lunbo_white, R.drawable.lunbo_gray);
 					abSlidingPlayView.addView(mPlayView);
 				} catch (Exception e) {
 				}
@@ -178,11 +189,11 @@ public class AnnouncementListActivity extends BaseActivity implements OnHeaderRe
 
 					@Override
 					public void onClick(int position) {
-						
+
 					}
 				});
 	}
-	
+
 	@Override
 	public void onFooterLoad(AbPullToRefreshView arg0) {
 		loadmore = true;
