@@ -55,7 +55,8 @@ public class AirMesAdapter extends BaseAdapter{
 		return position;
 	}
 
-	int index;
+	
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
@@ -70,6 +71,7 @@ public class AirMesAdapter extends BaseAdapter{
 		}else{
 			viewHolder = (ViewHolder) convertView.getTag();
 		}
+		final int index;
 		index=position;
 		viewHolder.tvAirName.setText(mList.get(position).getName());
 		viewHolder.bt_update.setOnClickListener(new OnClickListener() {		

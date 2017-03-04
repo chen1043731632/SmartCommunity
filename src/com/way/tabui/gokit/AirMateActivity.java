@@ -13,6 +13,7 @@ import com.way.util.AirMesinfo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,11 +27,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,6 +47,7 @@ public class AirMateActivity extends GosBaseActivity {
 	private TextView tv_pro,tv_brand;
 	private int min, max, brand, index;
 	private String name = "Null";
+	private Button bt_diybrand;
 	/** 型号代码 */
 	private int sendtype = 131072;// 02 xx xx
 
@@ -52,6 +57,11 @@ public class AirMateActivity extends GosBaseActivity {
 
 	/** 空调命令 */
 	private static final String KEY_Sendair = "Send_aircon";
+	
+	private int windex = 1;
+
+	private boolean isstart=true;
+	private Dialog dialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +78,6 @@ public class AirMateActivity extends GosBaseActivity {
 	}
 
 	private void initDevice() {
-
 		Intent intent = getIntent();
 		device = (GizWifiDevice) intent.getParcelableExtra("GizWifiDevice");
 	}
@@ -80,6 +89,8 @@ public class AirMateActivity extends GosBaseActivity {
 
 		tv_pro = (TextView) findViewById(R.id.tv_pro);
 		tv_brand=(TextView)findViewById(R.id.tv_brand);
+		
+		bt_diybrand=(Button) findViewById(R.id.bt_diybrand);
 		ib_pre.setEnabled(false);
 
 	}
@@ -98,6 +109,14 @@ public class AirMateActivity extends GosBaseActivity {
 
 	private void initEvent() {
 
+		bt_diybrand.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				setBrandInfo();
+			}
+		});
 		ib_pre.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -139,7 +158,7 @@ public class AirMateActivity extends GosBaseActivity {
 				boolean isopen = false;
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-					isonclick=false;
+//					isonclick=false;
 					if (!isopen) {
 						
 						isstart=true;
@@ -151,7 +170,7 @@ public class AirMateActivity extends GosBaseActivity {
 					break;
 
 				case MotionEvent.ACTION_UP:
-					isonclick=false;
+//					isonclick=false;
 					isstart=false;
 					initTimer();
 //					myThread.interrupt();
@@ -177,7 +196,7 @@ public class AirMateActivity extends GosBaseActivity {
 //		});
 		
 	}
-	boolean isonclick;
+//	boolean isonclick;
 	protected void boundAlert(Context context) {
 		String title, message, nbtext, pbtext;
 		title = (String) getText(R.string.prompt);
@@ -288,10 +307,71 @@ public class AirMateActivity extends GosBaseActivity {
 		}
 	};
 	
-	int windex = 1;
-
-	boolean isstart=true;
 	
+	private void setBrandInfo() {
+		dialog = new AlertDialog.Builder(this).setView(new EditText(this)).create();
+		dialog.show();
+		Window window = dialog.getWindow();
+		window.setContentView(R.layout.alert_diy_air_brand);
+
+		final EditText etminbrand;
+		final EditText etmaxbrand;
+		
+		etminbrand = (EditText) window.findViewById(R.id.etminbrand);
+		etmaxbrand = (EditText) window.findViewById(R.id.etmaxbrand);
+
+		LinearLayout llNo, llSure;
+		
+		llNo = (LinearLayout) window.findViewById(R.id.llNo);
+		llSure = (LinearLayout) window.findViewById(R.id.llSure);
+
+		
+		
+		etminbrand.setText(""+min);
+		
+	
+		etmaxbrand.setText(""+max);
+	
+
+		llNo.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				dialog.cancel();
+			}
+		});
+
+		llSure.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				int minbrand;
+				int maxbrand;
+				try {
+				minbrand=Integer.parseInt(etminbrand.getText().toString());
+				maxbrand=Integer.parseInt(etmaxbrand.getText().toString());
+				if(minbrand<=maxbrand){
+					min=minbrand;
+					max=maxbrand;
+					brand = min;
+					index = 1;
+					setProText();
+					Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
+					dialog.cancel();
+				}else{
+					Toast.makeText(getApplicationContext(), "起始值不可超过结束值", Toast.LENGTH_SHORT).show();
+				}
+				
+				} catch (Exception e) {
+					// TODO: handle exception
+					Toast.makeText(getApplicationContext(), "数据错误,修改失败", Toast.LENGTH_SHORT).show();
+					dialog.cancel();
+				}
+			
+				
+			}
+		});
+	}
 //	public class MyThread implements Runnable {
 //		@Override
 //		public void run() {

@@ -55,7 +55,7 @@ public class GosDeviceListAdapter extends BaseAdapter {
 		return 0;
 	}
 
-	int index;
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view = convertView;
@@ -67,7 +67,7 @@ public class GosDeviceListAdapter extends BaseAdapter {
 		} else {
 			holder = (Holder) view.getTag();
 		}
-		index =position;
+		
 		final GizWifiDevice device = deviceList.get(position);
 		String LAN, noLAN, unbind;
 		LAN = (String) context.getText(R.string.lan);

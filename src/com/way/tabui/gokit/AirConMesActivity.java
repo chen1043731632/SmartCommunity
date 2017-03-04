@@ -208,9 +208,7 @@ public class AirConMesActivity extends GosBaseActivity {
 		LinearLayout llNo, llSure;
 		
 		llNo = (LinearLayout) window.findViewById(R.id.llNo);
-		llSure = (LinearLayout) window.findViewById(R.id.llSure);
-
-		
+		llSure = (LinearLayout) window.findViewById(R.id.llSure);	
 		if (airMesinfo.getName()!=null) {
 			etAlias.setText(airMesinfo.getName());
 		}
