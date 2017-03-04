@@ -222,7 +222,6 @@ public class GosDeviceListActivity extends GosDeviceModuleBaseActivity implement
 				break;
 
 			case RENAME:
-//				location = msg.arg1;
 
 				rndevice=(GizWifiDevice) msg.obj;
 				setDeviceInfo();
@@ -938,7 +937,7 @@ int   count=0;
 		llNo = (LinearLayout) window.findViewById(R.id.llNo);
 		llSure = (LinearLayout) window.findViewById(R.id.llSure);
 
-		 final GizWifiDevice device =rndevice;
+		 final GizWifiDevice device = rndevice;
 	
 		if(device.getListener()!=null){
 		flag=false;

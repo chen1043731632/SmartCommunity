@@ -51,6 +51,7 @@ import com.way.tabui.actity.MainActivity.MyReceiver;
 import com.way.tabui.cevicemodule.GosDeviceListActivity;
 import com.way.tabui.commonmodule.GosConstant;
 import com.way.tabui.controlmodule.GosDeviceControlActivity;
+import com.way.tabui.gokit.AirConMesActivity;
 import com.way.tabui.gokit.AlertmesActivity;
 import com.way.tabui.gokit.AllMessageActivity;
 import com.way.tabui.gokit.PromailActivity;
@@ -621,7 +622,7 @@ public class SampleFragment extends Fragment {
 	//智能空调
 	private void smart_condition() {
 		if (!getofisoffline()) {
-			Intent intent = new Intent(context, SmartAirConditionActivity.class);
+			Intent intent = new Intent(context, AirConMesActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putParcelable("GizWifiDevice",
 					(GizWifiDevice) ((MainActivity) getActivity()).device);

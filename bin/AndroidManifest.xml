@@ -38,9 +38,8 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    
-    
-    <!--后加权限-->
+
+    <!-- 后加权限 -->
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -49,7 +48,7 @@
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    
+
     <!-- 极光推送 -->
     <permission
         android:name="com.way.tabui.permission.JPUSH_MESSAGE"
@@ -103,8 +102,8 @@
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
 
     <application
-        android:allowBackup="true"
         android:name="com.way.tabui.GosApplication"
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
@@ -237,6 +236,22 @@
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
         <activity
+            android:name=".AirConMesActivity"
+            android:label="@string/title_activity_air_con_mes"
+            android:theme="@android:style/Theme.Holo.Light" >
+        </activity>
+        <activity
+            android:name=".AirConBrandActivity"
+            android:label="@string/title_activity_air_con_brand"
+            android:theme="@android:style/Theme.Holo.Light" >
+        </activity>
+        
+        <activity
+            android:name=".AirMateActivity"
+            android:label="@string/title_activity_air_mate"
+            android:theme="@android:style/Theme.Holo.Light" >
+        </activity>
+        <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true" >
@@ -319,94 +334,77 @@
             android:label="@string/title_activity_smart_air_condition"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-
-          <activity
+        <activity
             android:name="com.way.tabui.settingsmodule.SetBundMesActivity"
             android:label="@string/title_activity_set_bund_mes"
-             android:theme="@android:style/Theme.Holo.Light" >
+            android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-         <!-- 物业报修 -->
+        <!-- 物业报修 -->
         <activity
             android:name="com.property.activity.InformActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name="com.property.activity.BaoxiuguanliActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
-        <activity
-            android:name="com.property.activity.BaoxiushenqingActivity">
+        <activity android:name="com.property.activity.BaoxiushenqingActivity" >
         </activity>
-        
         <activity
             android:name="com.property.activity.BaoxiuxiangqingActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name="com.property.activity.ChakandatuActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name="com.property.activity.FaultDeleteActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name="com.property.activity.FaultProgressActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
-        
         <activity
             android:name="com.property.activity.JiaofeiDetailActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
-        
         <activity
             android:name="com.property.activity.JiaofeiListActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
-        
         <activity
             android:name="com.property.activity.JiaofeifenleiActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name="com.property.activity.JiaofeijiluActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name="com.property.activity.AnnouncementInfoActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name="com.property.activity.AnnouncementListActivity"
             android:label="@string/title_activity_inform"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-         <!-- 物业报修 -->
-         
-        
+        <!-- 物业报修 -->
+
+
         <!-- 数据版本 -->
         <meta-data
             android:name="PW_CONFIG_SDK_IDENTIFIER_CODE"
@@ -591,7 +589,7 @@
 
 
         <!-- <activity android:name="com.way.tabui.controlmodule.GosColorsListActivity"></activity> -->
-      
+        
     </application>
 
 </manifest>

@@ -36,6 +36,7 @@
             android:textColor="@color/black" />
     </LinearLayout>
 
+    
     <com.way.tabui.view.SlideListView2
         android:id="@+id/slideListView1"
         android:layout_width="match_parent"

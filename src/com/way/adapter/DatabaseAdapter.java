@@ -2,6 +2,9 @@ package com.way.adapter;
 
 import java.util.ArrayList;
 
+import cn.jpush.a.a.a;
+
+import com.way.util.AirMesinfo;
 import com.way.util.Alertinfo;
 import com.way.util.GizMetaData;
 import com.way.util.Gizinfo;
@@ -19,6 +22,7 @@ public class DatabaseAdapter {
 	public DatabaseAdapter(Context context){
 		dbHelper= new DatebaseHelper(context);
 	}
+	
 	public void add(Gizinfo gizinfo){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -38,6 +42,7 @@ public class DatabaseAdapter {
 		db.close();
 	}
 	
+	
 	public void addalert(Alertinfo alertinfo){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
@@ -56,6 +61,27 @@ public class DatabaseAdapter {
 		db.close();
 	}
 	
+	public void addairmes(AirMesinfo airMesinfo){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		if(airMesinfo.get_id()!=0){
+			values.put(GizMetaData.Aircondition._ID,  airMesinfo.get_id());
+		}
+		
+		values.put(GizMetaData.Aircondition.AIR_NAME,  airMesinfo.getName());
+		values.put(GizMetaData.Aircondition.AIR_BRAND,  airMesinfo.getBrand());
+		values.put(GizMetaData.Aircondition.AIR_TEM,  airMesinfo.getTemperature());
+		values.put(GizMetaData.Aircondition.AIR_MODE,  airMesinfo.getMode());
+		values.put(GizMetaData.Aircondition.AIR_WS,  airMesinfo.getSpeed());
+		values.put(GizMetaData.Aircondition.AIR_WD,  airMesinfo.getDirection());
+		values.put(GizMetaData.Aircondition.GIZ_BINDGIZ, airMesinfo.getBindgiz());
+		values.put(GizMetaData.Aircondition.GIZ_USERID, airMesinfo.getUserid());
+		values.put(GizMetaData.Aircondition.GIZ_FLAG, airMesinfo.getFlag());
+		
+		//参数说明(表名,可以为空的列名，ContentValues)
+		db.insert(GizMetaData.Aircondition.TABLE_NAME, null, values);
+		db.close();
+	}
 	public void delete(int id){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String whereClause =GizMetaData.GizTable.GIZ_ID+"=?";
@@ -70,6 +96,15 @@ public class DatabaseAdapter {
 		String[] whereArgs = {String.valueOf(id)};
 		//参数说明(表名,条件，条件的值)
 		db.delete(GizMetaData.AlertTable.TABLE_NAME, whereClause, whereArgs);
+		db.close();
+	}
+	
+	public void deleteairmes(int id){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		String whereClause =GizMetaData.AlertTable._ID+"=?";
+		String[] whereArgs = {String.valueOf(id)};
+		//参数说明(表名,条件，条件的值)
+		db.delete(GizMetaData.Aircondition.TABLE_NAME, whereClause, whereArgs);
 		db.close();
 	}
 	
@@ -91,17 +126,34 @@ public class DatabaseAdapter {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		values.put(GizMetaData.AlertTable.ALERT_NAME,  alertinfo.getName());
-		values.put(GizMetaData.AlertTable.ALERT_NAME, alertinfo.getTime());
+		values.put(GizMetaData.AlertTable.ALERT_TIME, alertinfo.getTime());
 		values.put(GizMetaData.AlertTable.GIZ_BINDGIZ, alertinfo.getBindgiz());
 		values.put(GizMetaData.AlertTable.GIZ_USERID, alertinfo.getUserid());
 		values.put(GizMetaData.AlertTable.GIZ_FLAG, alertinfo.getFlag());
-		String whereClause =GizMetaData.GizTable.GIZ_ID+"=?";
+		String whereClause =GizMetaData.AlertTable._ID+"=?";
 		String[] whereArgs = {String.valueOf(alertinfo.getId())};
 		//参数说明(表名,ContentValues,条件，条件的值)
 		db.update(GizMetaData.AlertTable.TABLE_NAME, values, whereClause, whereArgs);
 	}
 	
-	
+	public void updateairmes(AirMesinfo airMesinfo){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(GizMetaData.Aircondition.AIR_NAME, airMesinfo.getName());
+		values.put(GizMetaData.Aircondition.AIR_BRAND,  airMesinfo.getBrand());
+		values.put(GizMetaData.Aircondition.AIR_TEM,  airMesinfo.getTemperature());
+		values.put(GizMetaData.Aircondition.AIR_MODE,  airMesinfo.getMode());
+		values.put(GizMetaData.Aircondition.AIR_WS,  airMesinfo.getSpeed());
+		values.put(GizMetaData.Aircondition.AIR_WD,  airMesinfo.getDirection());
+		values.put(GizMetaData.Aircondition.GIZ_BINDGIZ, airMesinfo.getBindgiz());
+		values.put(GizMetaData.Aircondition.GIZ_USERID, airMesinfo.getUserid());
+		values.put(GizMetaData.Aircondition.GIZ_FLAG, airMesinfo.getFlag());
+		String whereClause =GizMetaData.Aircondition._ID+"=?";
+		String[] whereArgs = {String.valueOf(airMesinfo.get_id())};
+		//参数说明(表名,ContentValues,条件，条件的值)
+		db.update(GizMetaData.Aircondition.TABLE_NAME, values, whereClause, whereArgs);
+	}
+
 	public Gizinfo findById(int id){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String[] columns={GizMetaData.GizTable.GIZ_ID,GizMetaData.GizTable.GIZ_NAME,GizMetaData.GizTable.GIZ_ADDRESS,GizMetaData.GizTable.GIZ_BINDGIZ,GizMetaData.GizTable.GIZ_USERID,GizMetaData.GizTable.GIZ_FLAG};
@@ -124,7 +176,6 @@ public class DatabaseAdapter {
 		return gizinfo;
 	}
 	
-
 	public ArrayList<Gizinfo> findbybindgiz(String bindgiz){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String whereClause =GizMetaData.GizTable.GIZ_BINDGIZ+"=?";
@@ -175,6 +226,33 @@ public class DatabaseAdapter {
 		
 	}
 	
+	public ArrayList<AirMesinfo> findbybindgizairmes(String bindgiz){
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		String whereClause =GizMetaData.Aircondition.GIZ_BINDGIZ+"=?";
+		String[] whereArgs = {bindgiz};
+		String[] columns={GizMetaData.Aircondition._ID,GizMetaData.Aircondition.AIR_NAME,GizMetaData.Aircondition.AIR_BRAND,GizMetaData.Aircondition.AIR_TEM,GizMetaData.Aircondition.AIR_MODE,GizMetaData.Aircondition.AIR_WS,GizMetaData.Aircondition.AIR_WD,GizMetaData.Aircondition.GIZ_BINDGIZ,GizMetaData.Aircondition.GIZ_USERID,GizMetaData.Aircondition.GIZ_FLAG};
+		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)GizMetaData.AlertTable._ID+" DESC"
+		Cursor c = db.query(true, GizMetaData.Aircondition.TABLE_NAME, columns, whereClause, whereArgs, null, null,GizMetaData.Aircondition._ID+" DESC", null);
+		ArrayList<AirMesinfo> alerts = new ArrayList<AirMesinfo>(); 
+		AirMesinfo airMesinfo =null;
+	   while(c.moveToNext()){
+		   airMesinfo=new AirMesinfo();
+		   airMesinfo.set_id(c.getInt(c.getColumnIndexOrThrow(GizMetaData.Aircondition._ID)));
+		   airMesinfo.setName(c.getString(c.getColumnIndexOrThrow(GizMetaData.Aircondition.AIR_NAME)));
+		   airMesinfo.setBrand(c.getInt(c.getColumnIndexOrThrow(GizMetaData.Aircondition.AIR_BRAND)));
+		   airMesinfo.setTemperature(c.getInt(c.getColumnIndexOrThrow(GizMetaData.Aircondition.AIR_TEM)));
+		   airMesinfo.setMode(c.getInt(c.getColumnIndexOrThrow(GizMetaData.Aircondition.AIR_MODE)));
+		   airMesinfo.setSpeed(c.getInt(c.getColumnIndexOrThrow(GizMetaData.Aircondition.AIR_WS)));
+		   airMesinfo.setDirection(c.getInt(c.getColumnIndexOrThrow(GizMetaData.Aircondition.AIR_WD)));
+		   airMesinfo.setBindgiz(c.getString(c.getColumnIndexOrThrow(GizMetaData.Aircondition.GIZ_BINDGIZ)));
+		   airMesinfo.setUserid(c.getString(c.getColumnIndexOrThrow(GizMetaData.Aircondition.GIZ_USERID)));
+		   airMesinfo.setFlag(c.getInt(c.getColumnIndexOrThrow(GizMetaData.Aircondition.GIZ_FLAG)));
+		   alerts.add(airMesinfo);
+	   }
+	   c.close();
+	   db.close();
+	   return alerts;
+	}
 	public Alertinfo findbybindgizname(String bindgiz,String name){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String whereClause =GizMetaData.AlertTable.GIZ_BINDGIZ+"=? and "+GizMetaData.AlertTable.ALERT_NAME+"=?";

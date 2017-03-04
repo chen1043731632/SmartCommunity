@@ -14,4 +14,18 @@
         <item>插座5</item>
     </string-array>
     
+     <string-array name="airbrand">
+        <item>自定义匹配</item>
+        <item>格力</item>
+        <item>海尔</item>
+        <item>美的</item>
+        <item>长虹</item>
+        <item>志高</item>
+        <item>华宝</item>
+        <item>科龙</item>
+        <item>TCL</item>
+        <item>格兰仕</item>
+        <item>华凌</item>
+    </string-array>
+    
 </resources>

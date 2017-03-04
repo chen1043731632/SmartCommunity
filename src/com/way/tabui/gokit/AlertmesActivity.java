@@ -51,9 +51,7 @@ public class AlertmesActivity extends Activity {
 		setActionBar(true, true,"警报记录");
 		Intent intent = getIntent();
 		MacAddress = intent.getStringExtra("MacAddress");
-		 progressDialog = new ProgressDialog(this);
-	      
-	     
+		progressDialog = new ProgressDialog(this);
 		dbAdapter=new DatabaseAdapter(this);
 		dbHelper=new DatebaseHelper(this);
 //		 receiver=new MyReceiver();

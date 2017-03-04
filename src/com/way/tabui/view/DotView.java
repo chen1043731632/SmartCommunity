@@ -28,7 +28,6 @@ public class DotView extends View {
 		p = new Paint(Paint.ANTI_ALIAS_FLAG);  
 		p.setStyle(Style.FILL);  
 		p.setColor(context.getResources().getColor(R.color.line_gray)); 
-		
 		final float scale = context.getResources().getDisplayMetrics().density;
 		dash=(int) (3 * scale + 0.5f);
 	}

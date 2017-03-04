@@ -190,7 +190,7 @@
     <string name="go_ahead">继续</string>
     <string name="my_phone">手机</string>
     <string name="yes">是</string>
-    <string name="no">否</string>
+    <string name="no">取消</string>
     <string name="upload_failed">上传失败(%1$s)</string>
     <string name="uploading">正在上传(%1$s)</string>
     <string name="upload_complete">上传完成(%1$s)</string>
@@ -1234,6 +1234,9 @@ UID：{4}"</string>
     <string name="settings_mail">设置邮箱信息</string>
     <string name="title_activity_smart_air_condition">智能空调</string>
     <string name="title_activity_set_bund_mes">设置绑定信息</string>
-     <string name="title_activity_inform">物业通知</string>
+    <string name="title_activity_inform">物业通知</string>
+    <string name="title_activity_air_con_mes">设备列表</string>
+    <string name="title_activity_air_con_brand">选择设备</string>
+    <string name="title_activity_air_mate">配对设备</string>
 
 </resources>

@@ -20,7 +20,7 @@ public final class GizMetaData {
 		public static final String  GIZ_FLAG="flag";//留用
 	}
 
-	
+	//警告记录表
 	public static abstract class AlertTable implements BaseColumns{
 		public static final String TABLE_NAME ="alert";
 		public static final String ALERT_NAME="name";
@@ -28,6 +28,20 @@ public final class GizMetaData {
 		public static final String GIZ_BINDGIZ="bindgiz";//绑定到此Mac地址的板子
 		public static final String  GIZ_USERID="userid";//用户ID，备用
 		public static final String  GIZ_FLAG="flag";//留用
-		
 	}
+	//空调设备记录表
+	public static abstract class Aircondition implements BaseColumns{
+		public static final String TABLE_NAME="airmes";
+		public static final String AIR_NAME="name";//名称
+		public static final String AIR_BRAND="brand";//型号
+		public static final String AIR_TEM="temperature";//温度
+		public static final String AIR_MODE="mode";//模式
+		public static final String AIR_WS="speed";//风速
+		public static final String AIR_WD="direction";//风向
+		public static final String GIZ_BINDGIZ="bindgiz";//绑定到此Mac地址的板子
+		public static final String GIZ_USERID="userid";//用户ID，备用
+		public static final String GIZ_FLAG="flag";//留用
+
+	}
+	
 }

@@ -4,9 +4,12 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONException;
+import org.kymjs.kjframe.ui.BindView;
 
+import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,90 +17,96 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gizwits.gizwifisdk.api.GizWifiDevice;
+import com.way.adapter.DatabaseAdapter;
 import com.way.tabui.commonmodule.GosBaseActivity;
+import com.way.util.AirMesinfo;
 
 public class SmartAirConditionActivity extends GosBaseActivity {
+	/** 开 关 0:开 1：关 */
+	private int[] OPCL = { 327432, 262152 };
 
-	/** 开 */
-	private Button bt_open;
-	private int OPEN = 327432;// 04 FF 08
+	@BindView(id = R.id.bt_open_close, click = true)
+	private Button btOpCl;
 
-	/** 关 */
-	private Button bt_close;
-	private int CLOSE = 262152;// 04 00 08
+	/** 模式 0：制冷 1：抽湿 2：送风 3：制热 */
+	private int[] MOD = { 327944, 328200, 324456, 328712 };
+	/** 模式图片资源索引 0：制冷 1：抽湿 2：送风 3：制热 */
+	private int[] imaMOD = { R.drawable.btn_mode_cold_black,
+			R.drawable.btn_mode_humidity_black,
+			R.drawable.btn_winddirect_black, R.drawable.btn_mode_hot_black };
+	/** 模式文字资源索引 0：制冷 1：抽湿 2：送风 3：制热 */
+	private String[] txMOD = { "制冷", "抽湿", "送风", "制热" };
 
-	/** 制冷 */
-	private Button bt_cool;
-	private int COOL = 327944;// 05 01 08
-
-	/** 抽湿 */
-	private Button bt_dehumidifier;
-	private int DEHUM = 328200;// 05 02 08
-	
-	/** 送风 */
-	private Button bt_airsupply;
-	private int AIRSUPPLY = 328456;// 05 03 08
-	
-	/** 制热 */
-	private Button bt_heat;
-	private int HEAT = 328712;// 05 04 08
+	private Button btMod;
 
 	/** 减少温度 */
-	private Button bt_sub;
+	private Button btSub;
 	/** 增加温度 */
-	private Button bt_add;
+	private Button btAdd;
+
 	/** 发送温度 */
-	private Button bt_sendtem;
 	private int sendtem = 393216; // 06 xx xx
-	
 	/** 发送遥控类型 */
-	private Button bt_type;
 	private int sendtype = 131072;// 02 xx xx
-	
-	/** 休眠 */
-	private Button bt_hibernate;
-	private int hib;
 
 	/** 初始化自动 */
-	private Button bt_initauto;
-	private int INITAUTO = 11184648;//AA AA 08
+	private int INITAUTO = 11184648;// AA AA 08
 
 	/** 初始化结束 */
-	private Button bt_initover;
-	private int INITOVER = 13421576;//CC CC 08
+	private int INITOVER = 13421576;// CC CC 08
+	/** 风速 0:自动 1：低速 2：中速 3：高速 */
+	private int[] WS = { 458760, 459016, 459272, 459528 };
+	/** 风速图片资源索引 0:自动 1：低速 2：中速 3：高速 */
+	private int[] imaWS = { R.drawable.ic_conditionor_windcapacity_aoto,
+			R.drawable.ic_conditionor_windcapacity_low,
+			R.drawable.ic_conditionor_windcapacity_middle,
+			R.drawable.ic_conditionor_windcapacity };
 
-	/** 自动风速 */
-	private Button bt_wsauto;
-	private int WSAUTO = 458760;//07 00 08
-	
-	/** 风速1 */
-	private Button bt_ws1;
-	private int WS1 = 459016;  //07 01 08
-	
-	/** 风速2 */
-	private Button bt_ws2;
-	private int WS2 = 459272; //07 02 08
-	
-	/** 风速3 */
-	private Button bt_ws3;
-	private int WS3 = 459528; //07 03 08
+	private String[] txWS = { "自动", "低速", "中速", "高速" };
 
-	/** 自动风向 */
-	private Button bt_wdauto;
-	private int WDAUTO = 524296; //08 00 08
+	@BindView(id = R.id.bt_wind_speed, click = true)
+	private Button btWS;
 
-	/** 手动风向 */
-	private Button bt_wdmanual;
-	private int WDMANUAL = 524552; //08 01 08
+	/** 风向 0:自动 1：手动 */
+	private int[] WD = { 524296, 524552 };
+	/** 风向图片资源索引 0:自动 1：手动 */
+	private int[] imaWD = { R.drawable.btn_windspread,
+			R.drawable.btn_windspread_default };
+	/** 风向文字 0:自动 1：手动 */
+	private String[] txWD = { "自动风向", "手动风向" };
 
-	/** 温度编辑 */
-	private EditText ed_tem;
-	/** 遥控类型编辑 */
-	private EditText ed_type;
+	private Button btWD;
+
+	private TextView tvTem;
+
+	private TextView tvMod;
+
+	private ImageView imMod;
+
+	private ImageView imWS;
+
+	private TextView tvWS;
+
+	private TextView tvWD;
+
+	private ImageView imWD;
+
+	private LinearLayout llTem;
+
+	private LinearLayout llMod;
+
+	private LinearLayout llWsd;
+
+	boolean isOpen = false;
+	int modIndex = 0;
+	int wsIndex = 0;
+	int wdIndex = 0;
 
 	/** The GizWifiDevice device */
 	private GizWifiDevice device;
@@ -105,217 +114,181 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 	private HashMap<String, Object> deviceStatu;
 	/** 空调命令 */
 	private static final String KEY_Sendair = "Send_aircon";
-	
-    private TextView tx_state,tx_tem,tx_sw,tx_wd,tx_mod1,tx_mod2;
 
+	private int opcl;
+	private String name;
+	private int brand;
+	private int temperature;
+	private int _id;
+	
+	private DatabaseAdapter dbAdapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_smart_air_condition);
-		setActionBar(true, true, R.string.title_activity_smart_air_condition);
 		initDevice();
+		setActionBar(true, true, name);
+		dbAdapter=new DatabaseAdapter(SmartAirConditionActivity.this);	
 		initView();
 		initData();
 		initEvent();
+		
 	}
 
 	private void initView() {
-		bt_open = (Button) findViewById(R.id.bt_open);
-		bt_close = (Button) findViewById(R.id.bt_close);
-		bt_cool = (Button) findViewById(R.id.bt_cool);
-		bt_dehumidifier = (Button) findViewById(R.id.bt_dehumidifier);
-		bt_airsupply = (Button) findViewById(R.id.bt_airsupply);
-		bt_heat = (Button) findViewById(R.id.bt_heat);
 
-		bt_sub = (Button) findViewById(R.id.bt_sub);
-		bt_add = (Button) findViewById(R.id.bt_add);
-		bt_sendtem = (Button) findViewById(R.id.bt_sendtem);
-		bt_type = (Button) findViewById(R.id.bt_type);
-		bt_hibernate = (Button) findViewById(R.id.bt_hibernate);
-		bt_initauto = (Button) findViewById(R.id.bt_initauto);
-		bt_initover = (Button) findViewById(R.id.bt_initover);
-		bt_initover.setEnabled(false);
+		btAdd = (Button) findViewById(R.id.bt_add);
+		btMod = (Button) findViewById(R.id.bt_mod);
+		btOpCl = (Button) findViewById(R.id.bt_open_close);
+		btSub = (Button) findViewById(R.id.bt_sub);
+		btWD = (Button) findViewById(R.id.bt_wind_direction);
+		btWS = (Button) findViewById(R.id.bt_wind_speed);
 
-		bt_wsauto = (Button) findViewById(R.id.bt_wsauto);
-		bt_ws1 = (Button) findViewById(R.id.bt_ws1);
-		bt_ws2 = (Button) findViewById(R.id.bt_ws2);
-		bt_ws3 = (Button) findViewById(R.id.bt_ws3);
-		bt_wdauto = (Button) findViewById(R.id.bt_wdauto);
-		bt_wdmanual = (Button) findViewById(R.id.bt_wdmanual);
-		
+		tvMod = (TextView) findViewById(R.id.tv_mod);
+		tvTem = (TextView) findViewById(R.id.tv_tem);
+		tvWD = (TextView) findViewById(R.id.tv_wd);
+		tvWS = (TextView) findViewById(R.id.tv_ws);
 
-		ed_tem = (EditText) findViewById(R.id.ed_tem);
-		ed_type = (EditText) findViewById(R.id.ed_type);
-		
-		tx_state=  (TextView) findViewById(R.id.tx_state);
-		tx_tem=  (TextView) findViewById(R.id.tx_tem);
-		tx_sw=  (TextView) findViewById(R.id.tx_sw);
-		tx_wd=  (TextView) findViewById(R.id.tx_wd);
-		tx_mod1=  (TextView) findViewById(R.id.tx_mod1);
-        tx_mod2=  (TextView) findViewById(R.id.tx_mod2);
+		imMod = (ImageView) findViewById(R.id.im_mod);
+		imWD = (ImageView) findViewById(R.id.im_wd);
+		imWS = (ImageView) findViewById(R.id.im_ws);
+
+		llMod = (LinearLayout) findViewById(R.id.ll_mod);
+		llTem = (LinearLayout) findViewById(R.id.ll_tem);
+		llWsd = (LinearLayout) findViewById(R.id.ll_wsd);
 	}
-
+    String mac;
 	private void initDevice() {
 		Intent intent = getIntent();
 		device = (GizWifiDevice) intent.getParcelableExtra("GizWifiDevice");
+		mac=device.getMacAddress();
 		deviceStatu = new HashMap<String, Object>();
+		name = intent.getStringExtra("name");
+		brand = intent.getIntExtra("brand", 0);
+		temperature = intent.getIntExtra("temperature", 0);
+		modIndex = intent.getIntExtra("mod", 0);
+		wsIndex = intent.getIntExtra("speed", 0);
+		wdIndex = intent.getIntExtra("direction", 0);
+		opcl = intent.getIntExtra("opcl", 0);
+		_id=intent.getIntExtra("id", 0);
 	}
 
 	private void initData() {
+		try {
+			sendJson(KEY_Sendair, sendtype+brand);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		ed_tem.setText("16");
-		ed_type.setText("000");
-		tx_mod2.setText("");
+		if (opcl==0) {
+			llMod.setVisibility(View.VISIBLE);
+			llTem.setVisibility(View.VISIBLE);
+			llWsd.setVisibility(View.VISIBLE);
+		} else {
+			llMod.setVisibility(View.GONE);
+			llTem.setVisibility(View.GONE);
+			llWsd.setVisibility(View.GONE);
+		}
+		
+		tvTem.setText(""+temperature);
 
+		imMod.setBackgroundResource(imaMOD[modIndex]);
+		tvMod.setText(txMOD[modIndex]);
+
+		imWS.setBackgroundResource(imaWS[wsIndex]);
+		tvWS.setText(txWS[wsIndex]);
+
+		imWD.setBackgroundResource(imaWD[wdIndex]);
+		tvWD.setText(txWD[wdIndex]);
 	}
 
 	private void initEvent() {
-		bt_open.setOnClickListener(new OnClickListener() {
+		btOpCl.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				try {
-					sendJson(KEY_Sendair, OPEN);
-					tx_state.setText("开");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_close.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				try {
-					sendJson(KEY_Sendair, CLOSE);
-					tx_state.setText("关");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_cool.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				try {
-					sendJson(KEY_Sendair, COOL);
-					tx_mod1.setText("制冷");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_dehumidifier.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				try {
-					sendJson(KEY_Sendair, DEHUM);
-					if(!(tx_mod2.getText().toString().equals("抽湿"))){
-						tx_mod2.setText("抽湿");
-					}else{
-						tx_mod2.setText("");
-					}
-					
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_airsupply.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				try {
-					sendJson(KEY_Sendair, AIRSUPPLY);
-					if(!(tx_mod2.getText().toString().equals("送风"))){
-						tx_mod2.setText("送风");
-					}else{
-						tx_mod2.setText("");
-					}
-					
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_heat.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				try {
-					sendJson(KEY_Sendair, HEAT);
-					tx_mod1.setText("制热");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_sub.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int tem = Integer.parseInt(ed_tem.getText().toString());
-				if (tem > 16) {
-					ed_tem.setText(""+(tem-1));
-				} else {
-					Toast.makeText(getApplicationContext(), "请在16~30℃中选择温度",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-		bt_add.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int tem = Integer.parseInt(ed_tem.getText().toString());
-				if (tem <30) {
-					ed_tem.setText(""+(tem+1));
-				} else {
-					Toast.makeText(getApplicationContext(), "请在16~30℃中选择温度",
-							Toast.LENGTH_SHORT).show();
-				}
-			}
-		});
-
-		bt_sendtem.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				int tem = Integer.parseInt(ed_tem.getText().toString());
-				String temx = Integer.toHexString(tem) + "08";
-                if (tem>=16&&tem<=30) {
+				vSimple();
+				if (opcl==0) {
 					try {
-						sendtem = sendtem + Integer.valueOf(temx,16);
-						sendJson(KEY_Sendair, sendtem);
-						tx_tem.setText(ed_tem.getText().toString());
-						sendtem = 393216;
+						sendJson(KEY_Sendair, OPCL[1]);
+						llMod.setVisibility(View.GONE);
+						llTem.setVisibility(View.GONE);
+						llWsd.setVisibility(View.GONE);
+						opcl=1;
+						updbData();
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+					}
+				}
+
+				else {
+					try {
+						sendJson(KEY_Sendair, OPCL[0]);
+						llMod.setVisibility(View.VISIBLE);
+						llTem.setVisibility(View.VISIBLE);
+						llWsd.setVisibility(View.VISIBLE);
+						opcl=0;
+						updbData();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+
+					}
+				}
+			}
+		});
+
+		btSub.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				vSimple();
+				temperature= Integer.parseInt(tvTem.getText().toString());
+				if (temperature > 16) {
+					tvTem.setText("" + (temperature - 1));
+					temperature = Integer.parseInt(tvTem.getText().toString());
+					String temx = Integer.toHexString(temperature) + "08";
+					try {
+						sendtem = sendtem + Integer.valueOf(temx, 16);
+						sendJson(KEY_Sendair, sendtem);
+						sendtem = 393216;
+						updbData();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						Toast.makeText(getApplicationContext(), "发送失败",
+								Toast.LENGTH_SHORT).show();
+						sendtem = 393216;
+					}
+				} else {
+					Toast.makeText(getApplicationContext(), "请在16~30℃中选择温度",
+							Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		btAdd.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				vSimple();
+				temperature = Integer.parseInt(tvTem.getText().toString());
+
+				if (temperature < 30) {
+					tvTem.setText("" + (temperature + 1));
+					temperature = Integer.parseInt(tvTem.getText().toString());
+					String temx = Integer.toHexString(temperature) + "08";
+					try {
+						sendtem = sendtem + Integer.valueOf(temx, 16);
+						sendJson(KEY_Sendair, sendtem);
+						sendtem = 393216;
+						updbData();
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						Toast.makeText(getApplicationContext(), "发送失败",
+								Toast.LENGTH_SHORT).show();
+						sendtem = 393216;
 					}
 				} else {
 					Toast.makeText(getApplicationContext(), "请在16~30℃中选择温度",
@@ -324,172 +297,89 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 			}
 		});
 
-		bt_type.setOnClickListener(new OnClickListener() {
+		btMod.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				int type = Integer.parseInt(ed_type.getText().toString());
+				vSimple();
+				modIndex++;
+				if (modIndex >= 4)
+					modIndex = 0;
+
 				try {
-					sendtype = sendtype + type;
-					sendJson(KEY_Sendair, sendtype);
-					sendtype = 131072;
+					sendJson(KEY_Sendair, MOD[modIndex]);
+					imMod.setBackgroundResource(imaMOD[modIndex]);
+					tvMod.setText(txMOD[modIndex]);
+					updbData();
+
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_hibernate.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				Toast.makeText(getApplicationContext(), "暂无此功能，敬请期待",
-						Toast.LENGTH_SHORT).show();
-			}
-		});
-
-		bt_initauto.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				try {
-					sendJson(KEY_Sendair, INITAUTO);
-					bt_initover.setEnabled(true);
-					Toast.makeText(getApplicationContext(), "初始化后请按‘初始化结束’按钮",
+					Toast.makeText(getApplicationContext(), "发送失败",
 							Toast.LENGTH_SHORT).show();
-					tx_mod1.setText("制热");
-					tx_sw.setText("自动");
-					tx_tem.setText("28");
-					tx_state.setText("开");
-					tx_wd.setText("自动");
-					tx_mod2.setText("");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
+
 			}
 		});
 
-		bt_initover.setOnClickListener(new OnClickListener() {
+		btWS.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				vSimple();
+				wsIndex++;
+				if (wsIndex >= 4)
+					wsIndex = 0;
 
 				try {
-					sendJson(KEY_Sendair, INITOVER);
-					Toast.makeText(getApplicationContext(), "初始化结束",
+					sendJson(KEY_Sendair, WS[wsIndex]);
+					imWS.setBackgroundResource(imaWS[wsIndex]);
+					tvWS.setText(txWS[wsIndex]);
+					updbData();
+
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					Toast.makeText(getApplicationContext(), "发送失败",
 							Toast.LENGTH_SHORT).show();
-					bt_initover.setEnabled(false);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
 		});
 
-		bt_wsauto.setOnClickListener(new OnClickListener() {
+		btWD.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
+				vSimple();
+				wdIndex++;
+				if (wdIndex >= 2)
+					wdIndex = 0;
 
 				try {
-					sendJson(KEY_Sendair, WSAUTO);
-					tx_sw.setText("自动");
-					
+					sendJson(KEY_Sendair, WD[wdIndex]);
+					imWD.setBackgroundResource(imaWD[wdIndex]);
+					tvWD.setText(txWD[wdIndex]);
+					updbData();
+
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					Toast.makeText(getApplicationContext(), "发送失败",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
 
-		bt_ws1.setOnClickListener(new OnClickListener() {
+	}
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				try {
-					sendJson(KEY_Sendair, WS1);
-					tx_sw.setText("1档");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-
-		bt_ws2.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-				try {
-					sendJson(KEY_Sendair, WS2);
-					tx_sw.setText("2档");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		bt_ws3.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				try {
-					sendJson(KEY_Sendair,WS3);
-					tx_sw.setText("3档");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		bt_wdauto.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				try {
-					sendJson(KEY_Sendair,WDAUTO);
-					tx_wd.setText("自动");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		bt_wdmanual.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-				try {
-					sendJson(KEY_Sendair,WDMANUAL);
-					tx_wd.setText("手动");
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
+	private void vSimple() {
+		Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
+		vibrator.vibrate(60);
+	}
+	
+	private void updbData(){
+		AirMesinfo airMesinfo =new AirMesinfo(_id, name, brand, temperature, modIndex, wsIndex, wdIndex, mac, "Null", opcl);
+		dbAdapter.updateairmes(airMesinfo);
 	}
 
 	private void sendJson(String key, Object value) throws JSONException {
@@ -499,7 +389,7 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 		Log.i("==", hashMap.toString());
 		// Log.i("Apptest", hashMap.toString());
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
