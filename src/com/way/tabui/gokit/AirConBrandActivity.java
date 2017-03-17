@@ -28,9 +28,9 @@ public class AirConBrandActivity extends GosBaseActivity {
 	/** 传过来正在连接中的的设备 */
 	private GizWifiDevice device = null;
 	MyAdapter adapter;
-	
-	int[] min={0,0,1,40,60,80,100,110,120,140,150};
-	int[] max={1000,39,19,59,79,99,109,119,139,149,169};
+	//各个品牌的控制码范围
+	int[] min={0,0,1,40,60,80,100,110,120,140,150,170,180,190,190,200,210};
+	int[] max={1000,39,19,59,79,99,109,119,139,149,169,179,199,190,190,209,229};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
