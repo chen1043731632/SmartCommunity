@@ -34,7 +34,8 @@ import com.xmcamera.core.sysInterface.OnXmListener;
 import com.xmcamera.core.sysInterface.OnXmSimpleListener;
 
 @SuppressLint("HandlerLeak")
-public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivity implements View.OnClickListener {
+public class GosAirlinkConfigCountdownActivity extends
+		GosConfigModuleBaseActivity implements View.OnClickListener {
 
 	/** The tv Time */
 	private TextView tvTimer;
@@ -55,10 +56,10 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 	String timerText;
 	IXmSystem xmSystem;
 	IXmBinderManager xmBinderManager;
-	
-	Button  btn_next ;
 
-	boolean isGiz,islc;
+	Button btn_next;
+
+	boolean isGiz, islc;
 	List<GizWifiGAgentType> modeList, modeDataList;
 
 	@Override
@@ -68,85 +69,81 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 		// 设置ActionBar
 		setActionBar(false, false, R.string.configcountDown_title);
 
-		
-		 
 		initData();
 		initView();
-		if(isGiz){
+		if (isGiz) {
 			startAirlink();
 		}
-		
-		if(islc){
-			 init();
-			 btn_next.setVisibility(View.VISIBLE);
-			 }
+
+		if (islc) {
+			init();
+			btn_next.setVisibility(View.VISIBLE);
+		}
 		handler.sendEmptyMessage(handler_key.START_TIMER.ordinal());
 	}
-	
-	private void init(){
-		
+
+	private void init() {
+
 		xmSystem = XmSystem.getInstance();
-		 xmBinderManager = xmSystem.xmGetBinderManager();
-	        xmBinderManager.setOnBindListener(xmBindListener);
-		 xmBinderManager.beginWork(GosAirlinkConfigCountdownActivity.this, workSSID, workSSIDPsw);
-//		 xmSystem.xmInit(this, "CN", new OnXmSimpleListener() {
-//	            @Override
-//	            public void onErr(XmErrInfo info) {
-//	                Log.v("AAAAA", "init Fail");
-//	            }
-//
-//	            @Override
-//	            public void onSuc() {
-//	                Log.v("AAAAA", "init Suc");
-//	            }
-//	        });
-		 
-		
-//		 try {
-//	            xmSystem.xmLogin("13135367953", "chen162858", new OnXmListener<XmAccount>() {
-//	                @Override
-//	                public void onSuc(XmAccount outinfo) {  
-////	                    handler.sendEmptyMessage(0x123);
-////	                    sp.setUsername(et_username.getText().toString());
-//	                	 xmBinderManager = xmSystem.xmGetBinderManager();
-//	         	        xmBinderManager.setOnBindListener(xmBindListener);
-//	         		 xmBinderManager.beginWork(GosAirlinkConfigCountdownActivity.this, workSSID, workSSIDPsw);
-//	                   
-//	                }
-//
-//	                @Override
-//	                public void onErr(XmErrInfo info) {
-//	                  
-////	                    handler.sendEmptyMessage(0x124);
-//	                }
-//	            });
-//	        } catch (Exception e) {
-//	            e.printStackTrace();
-////	            handler.sendEmptyMessage(0x124);
-//	        }
-		 
-		   
-		
+		xmBinderManager = xmSystem.xmGetBinderManager();
+		xmBinderManager.setOnBindListener(xmBindListener);
+		xmBinderManager.beginWork(GosAirlinkConfigCountdownActivity.this,
+				workSSID, workSSIDPsw);
+		// xmSystem.xmInit(this, "CN", new OnXmSimpleListener() {
+		// @Override
+		// public void onErr(XmErrInfo info) {
+		// Log.v("AAAAA", "init Fail");
+		// }
+		//
+		// @Override
+		// public void onSuc() {
+		// Log.v("AAAAA", "init Suc");
+		// }
+		// });
+
+		// try {
+		// xmSystem.xmLogin("13135367953", "chen162858", new
+		// OnXmListener<XmAccount>() {
+		// @Override
+		// public void onSuc(XmAccount outinfo) {
+		// // handler.sendEmptyMessage(0x123);
+		// // sp.setUsername(et_username.getText().toString());
+		// xmBinderManager = xmSystem.xmGetBinderManager();
+		// xmBinderManager.setOnBindListener(xmBindListener);
+		// xmBinderManager.beginWork(GosAirlinkConfigCountdownActivity.this,
+		// workSSID, workSSIDPsw);
+		//
+		// }
+		//
+		// @Override
+		// public void onErr(XmErrInfo info) {
+		//
+		// // handler.sendEmptyMessage(0x124);
+		// }
+		// });
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// // handler.sendEmptyMessage(0x124);
+		// }
+
 	}
-	
-	
 
 	private void initView() {
 		tvTimer = (TextView) findViewById(R.id.tvTimer);
 		rpbConfig = (RoundProgressBar) findViewById(R.id.rpbConfig);
-		btn_next = (Button)findViewById(R.id.btn_next);
-        btn_next.setOnClickListener(this);
+		btn_next = (Button) findViewById(R.id.btn_next);
+		btn_next.setOnClickListener(this);
 
 	}
 
 	private void initData() {
 		workSSID = spf.getString("workSSID", "");
 		workSSIDPsw = spf.getString("workSSIDPsw", "");
-		
-		Intent  intent =getIntent();
+
+		Intent intent = getIntent();
 		isGiz = intent.getBooleanExtra("isGiz", false);
 		islc = intent.getBooleanExtra("islc", false);
-		
+
 		modeDataList = new ArrayList<GizWifiGAgentType>();
 		modeDataList.add(GizWifiGAgentType.GizGAgentESP);
 		modeDataList.add(GizWifiGAgentType.GizGAgentHF);
@@ -163,9 +160,8 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 	}
 
 	private void startAirlink() {
-		GizWifiSDK.sharedInstance().setDeviceOnboarding(workSSID, workSSIDPsw, GizWifiConfigureMode.GizWifiAirLink,
-				null, 120, modeList);
-
+		GizWifiSDK.sharedInstance().setDeviceOnboarding(workSSID, workSSIDPsw,
+				GizWifiConfigureMode.GizWifiAirLink, null, 120, modeList);
 	}
 
 	private enum handler_key {
@@ -205,12 +201,11 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 		 * 配置超时
 		 */
 		TIMEOUT,
-		
 
 	}
 
-	boolean flaggiz=false;
-	boolean flaglc=false;
+	boolean flaggiz = false;
+	boolean flaglc = false;
 	/**
 	 * The handler.
 	 */
@@ -218,7 +213,7 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			handler_key key = handler_key.values()[msg.what];
-			
+
 			switch (key) {
 			case TIMER_TEXT:
 				tvTimer.setText(timerText);
@@ -228,62 +223,62 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 				isStartTimer();
 				break;
 
-				
 			case SUCCESSFUL:
-				Toast.makeText(GosAirlinkConfigCountdownActivity.this, "添加网关设备成功",
-						Toast.LENGTH_SHORT).show();
-				flaggiz=true;
-				if((isGiz)&&(!islc))
-				finish();
-//				task.cancel();
-//				timer.cancel();
-				if(flaggiz&&flaglc)
+				Toast.makeText(GosAirlinkConfigCountdownActivity.this,
+						"添加网关设备成功", Toast.LENGTH_SHORT).show();
+				flaggiz = true;
+				if ((isGiz) && (!islc))
 					finish();
-//				task.cancel();
-//				timer.cancel();
+				// task.cancel();
+				// timer.cancel();
+				if (flaggiz && flaglc)
+					finish();
+				// task.cancel();
+				// timer.cancel();
 				break;
-				
+
 			case FAILED:
-				Toast.makeText(GosAirlinkConfigCountdownActivity.this,"添加网关设备失败",
-						Toast.LENGTH_SHORT).show();
-				if((isGiz)&&(!islc)){
-				Intent intent = new Intent(GosAirlinkConfigCountdownActivity.this, GosDeviceReadyActivity.class);
-				startActivity(intent);
-				finish();
+				Toast.makeText(GosAirlinkConfigCountdownActivity.this,
+						"添加网关设备失败", Toast.LENGTH_SHORT).show();
+				if ((isGiz) && (!islc)) {
+					Intent intent = new Intent(
+							GosAirlinkConfigCountdownActivity.this,
+							GosDeviceReadyActivity.class);
+					startActivity(intent);
+					finish();
 				}
 				break;
 			case SUCCESSFULCL:
-				Toast.makeText(GosAirlinkConfigCountdownActivity.this,"添加摄像头设备成功",
-						Toast.LENGTH_SHORT).show();
-				flaglc=true;
-				if((!isGiz)&&(islc))
-				finish();
-//				task.cancel();
-//				timer.cancel();
-				if(flaggiz&&flaglc)
+				Toast.makeText(GosAirlinkConfigCountdownActivity.this,
+						"添加摄像头设备成功", Toast.LENGTH_SHORT).show();
+				flaglc = true;
+				if ((!isGiz) && (islc))
 					finish();
-//				task.cancel();
-//				timer.cancel();
+				// task.cancel();
+				// timer.cancel();
+				if (flaggiz && flaglc)
+					finish();
+				// task.cancel();
+				// timer.cancel();
 				break;
 
 			case ADDBYSELF:
-				Toast.makeText(GosAirlinkConfigCountdownActivity.this, "添加摄像头设备失败",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(GosAirlinkConfigCountdownActivity.this,
+						"添加摄像头设备失败", Toast.LENGTH_SHORT).show();
 				break;
-			
-				
+
 			case FAILEDCL:
-				Toast.makeText(GosAirlinkConfigCountdownActivity.this, "添加摄像头设备失败",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(GosAirlinkConfigCountdownActivity.this,
+						"添加摄像头设备失败", Toast.LENGTH_SHORT).show();
 				break;
 			case TIMEOUT:
-				Toast.makeText(GosAirlinkConfigCountdownActivity.this, "添加设备超时",
-						Toast.LENGTH_LONG).show();
+				Toast.makeText(GosAirlinkConfigCountdownActivity.this,
+						"添加设备超时", Toast.LENGTH_LONG).show();
 				finish();
-//				task.cancel();
-//				timer.cancel();
+				// task.cancel();
+				// timer.cancel();
 				break;
-				
+
 			default:
 				break;
 
@@ -302,13 +297,14 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 		return false;
 	}
 
-	TimerTask  task ;
+	TimerTask task;
+
 	// 倒计时
 	public void isStartTimer() {
 
 		secondleft = 120;
 		timer = new Timer();
-		task  =	new TimerTask() {
+		task = new TimerTask() {
 			@Override
 			public void run() {
 				secondleft--;
@@ -322,25 +318,22 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 				} else if (secondleft == 40) {
 					timerText = (String) getText(R.string.tring_join_device);
 					handler.sendEmptyMessage(handler_key.TIMER_TEXT.ordinal());
-				}else if (secondleft == 0) {
-					//timerText = (String) getText(R.string.tring_join_device);
+				} else if (secondleft == 0) {
+					// timerText = (String) getText(R.string.tring_join_device);
 					handler.sendEmptyMessage(handler_key.TIMEOUT.ordinal());
 				}
 			}
 		};
 		timer.schedule(task, 1000, 1000);
-		
-		
+
 	}
 
-	
-	
-	protected void didSetDeviceOnboarding(GizWifiErrorCode result, String mac, String did, String productKey) {
-		
-		if (GizWifiErrorCode.GIZ_SDK_DEVICE_CONFIG_IS_RUNNING==result) {
+	protected void didSetDeviceOnboarding(GizWifiErrorCode result, String mac,
+			String did, String productKey) {
+
+		if (GizWifiErrorCode.GIZ_SDK_DEVICE_CONFIG_IS_RUNNING == result) {
 			return;
 		}
-		
 		if (timer != null) {
 			timer.cancel();
 		}
@@ -353,73 +346,77 @@ public class GosAirlinkConfigCountdownActivity extends GosConfigModuleBaseActivi
 		Log.i("Apptest", result.toString());
 		handler.sendMessage(message);
 	}
-   
-	OnXmBindListener xmBindListener = new OnXmBindListener() {
-        @Override
-        public void addedByOther(String uuid, String user) {
-            xmBinderManager.exitAllWork();
-          //  finish();
-            Log.v("AAAAA","addedByOther");
-        }
-        @Override
-        public void addedSuccess(XmDevice dev) {
-            xmBinderManager.exitAllWork();
-            Message message = new Message();
-            message.what = handler_key.SUCCESSFULCL.ordinal();
-            handler.sendMessage(message);
-            Log.v("AAAAA", "addedSuccess");
-//            handler.sendEmptyMessage(0x123);
-        }
-        @Override
-        public void addedBySelf(String uuid, String user) {
-            xmBinderManager.exitAllWork();
-            Message message = new Message();
-            message.what = handler_key.ADDBYSELF.ordinal();
-            handler.sendMessage(message);
-         //   finish();
-            Log.v("AAAAA", "addedBySelf");
-        }
-        @Override
-        public void onDevConnectMgrErr(String uuid) {
-            finish();
-            Log.v("AAAAA", "onDevConnectMgrErr");
-        }
-        @Override
-        public void addErr(String uuid,XmErrInfo errinfo) {
-            finish();
-            Log.v("AAAAA", "addErr");
-        }
-    };
 
-    private void btn_next(){
-        btn_next.setVisibility(View.GONE);
-        xmBinderManager.exitSendWork();
-    }
+	OnXmBindListener xmBindListener = new OnXmBindListener() {
+		@Override
+		public void addedByOther(String uuid, String user) {
+			xmBinderManager.exitAllWork();
+			// finish();
+			Log.v("AAAAA", "addedByOther");
+		}
+
+		@Override
+		public void addedSuccess(XmDevice dev) {
+			xmBinderManager.exitAllWork();
+			Message message = new Message();
+			message.what = handler_key.SUCCESSFULCL.ordinal();
+			handler.sendMessage(message);
+			Log.v("AAAAA", "addedSuccess");
+			// handler.sendEmptyMessage(0x123);
+		}
+
+		@Override
+		public void addedBySelf(String uuid, String user) {
+			xmBinderManager.exitAllWork();
+			Message message = new Message();
+			message.what = handler_key.ADDBYSELF.ordinal();
+			handler.sendMessage(message);
+			// finish();
+			Log.v("AAAAA", "addedBySelf");
+		}
+
+		@Override
+		public void onDevConnectMgrErr(String uuid) {
+			finish();
+			Log.v("AAAAA", "onDevConnectMgrErr");
+		}
+
+		@Override
+		public void addErr(String uuid, XmErrInfo errinfo) {
+			finish();
+			Log.v("AAAAA", "addErr");
+		}
+	};
+
+	private void btn_next() {
+		btn_next.setVisibility(View.GONE);
+		xmBinderManager.exitSendWork();
+	}
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		 switch (v.getId()){
-         case R.id.btn_next:
-             btn_next();
-             break;
-     }
-		 
-		 
-	}	
-	
-	
-	  @Override
-	   protected void onDestroy() {
-//	        setResult(101);
-		  if(islc){
-	        xmBinderManager.exitAllWork();
-	        xmBinderManager.setOnBindListener(null);}
-	        try {
-	        	task.cancel();
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-	        
-	        super.onDestroy();
-	    }
+		switch (v.getId()) {
+		case R.id.btn_next:
+			btn_next();
+			break;
+		}
+
+	}
+
+	@Override
+	protected void onDestroy() {
+		// setResult(101);
+		if (islc) {
+			xmBinderManager.exitAllWork();
+			xmBinderManager.setOnBindListener(null);
+		}
+		try {
+			task.cancel();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		super.onDestroy();
+	}
 }

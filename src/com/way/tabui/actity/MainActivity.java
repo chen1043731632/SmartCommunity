@@ -401,13 +401,20 @@ public class MainActivity extends GosControlModuleBaseActivity implements
 		    	 String action = intent.getAction();
 			      Message msg = new Message();
 			      if(action.equals("com.way.tabui.actity.GizService")){
-		    	  temperature=intent.getStringExtra("temperature");
-				  humidity=intent.getStringExtra("humidity");   
+			    	temperature=intent.getStringExtra("temperature");
+				  	humidity=intent.getStringExtra("humidity");
+				  	if(spf.getBoolean("issafe", true)){
 					gasstua=intent.getBooleanExtra("gasstua", false);					
 					gatestua=intent.getBooleanExtra("gatestua", false);
 					bodystua=intent.getBooleanExtra("bodystua", false);	
 					smokestua=intent.getBooleanExtra("smokestua", false);
-					}	
+				  	}else{
+				  		gasstua=false;
+				  		smokestua=false;
+				  		gatestua=false;
+				  		bodystua=false;
+				  	}
+				  	}	
 			      if(action.equals("com.way.tabui.actity.GizServiceTOAST")){
 			    		
 			    		String mes=intent.getStringExtra("Toastdata");

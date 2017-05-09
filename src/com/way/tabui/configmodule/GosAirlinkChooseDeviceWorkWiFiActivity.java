@@ -36,7 +36,6 @@ import com.way.tabui.commonmodule.NetUtils;
 import com.way.tabui.configmodule.GosModeListActivity.ModeListAdapter;
 import com.way.tabui.gokit.R;
 
-
 @SuppressLint("InflateParams")
 public class GosAirlinkChooseDeviceWorkWiFiActivity extends
 		GosConfigModuleBaseActivity implements OnClickListener {
@@ -54,7 +53,7 @@ public class GosAirlinkChooseDeviceWorkWiFiActivity extends
 	private EditText etPsw;
 
 	/** The btn Next */
-	private Button btnNext,btnAll,btnlC;
+	private Button btnNext, btnAll, btnlC;
 
 	/** The ll ChooseMode */
 	private LinearLayout llChooseMode;
@@ -112,8 +111,8 @@ public class GosAirlinkChooseDeviceWorkWiFiActivity extends
 		etPsw = (EditText) findViewById(R.id.etPsw);
 		cbLaws = (CheckBox) findViewById(R.id.cbLaws);
 		btnNext = (Button) findViewById(R.id.btnNext);
-		btnlC=(Button) findViewById(R.id.btnlC);
-		btnAll=(Button) findViewById(R.id.btnAll);
+		btnlC = (Button) findViewById(R.id.btnlC);
+		btnAll = (Button) findViewById(R.id.btnAll);
 		llChooseMode = (LinearLayout) findViewById(R.id.llChooseMode);
 		imgWiFiList = (ImageView) findViewById(R.id.imgWiFiList);
 	}
@@ -151,16 +150,15 @@ public class GosAirlinkChooseDeviceWorkWiFiActivity extends
 		}
 	}
 
-	boolean isGiz,islc;
-	
-	private void tointent(){
+	boolean isGiz, islc;
+
+	private void tointent() {
 		workSSID = etSSID.getText().toString();
 		workSSIDPsw = etPsw.getText().toString();
 
 		if (TextUtils.isEmpty(workSSID)) {
 			Toast.makeText(GosAirlinkChooseDeviceWorkWiFiActivity.this,
-					R.string.choose_wifi_list_title, Toast.LENGTH_SHORT)
-					.show();
+					R.string.choose_wifi_list_title, Toast.LENGTH_SHORT).show();
 			return;
 		}
 		if (TextUtils.isEmpty(workSSIDPsw)) {
@@ -179,27 +177,27 @@ public class GosAirlinkChooseDeviceWorkWiFiActivity extends
 		} else {
 			toAirlinkReady();
 		}
-
 	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btnNext:
-			isGiz=true;
-			islc=false;
+			isGiz = true;
+			islc = false;
 			tointent();
 			break;
 		case R.id.btnlC:
-			isGiz=false;
-			islc=true;
+			isGiz = false;
+			islc = true;
 			tointent();
 			break;
 		case R.id.btnAll:
-			isGiz=true;
-			islc=true;
+			isGiz = true;
+			islc = true;
 			tointent();
 			break;
-			
+
 		case R.id.imgWiFiList:
 			AlertDialog.Builder dia = new AlertDialog.Builder(
 					GosAirlinkChooseDeviceWorkWiFiActivity.this);

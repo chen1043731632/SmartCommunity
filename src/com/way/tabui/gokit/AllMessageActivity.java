@@ -6,6 +6,7 @@ import com.way.adapter.AllmesAdapter;
 import com.way.adapter.DatabaseAdapter;
 import com.way.tabui.actity.MainActivity;
 import com.way.tabui.actity.MainActivity.MyReceiver;
+import com.way.tabui.commonmodule.GosBaseActivity;
 import com.way.util.Alertinfo;
 import com.way.util.Allmesinfo;
 
@@ -20,7 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-public class AllMessageActivity extends Activity {
+public class AllMessageActivity extends GosBaseActivity {
 
 	private  ListView listview_all_mes;
 	private ArrayList<Allmesinfo> mList = new ArrayList<Allmesinfo>();

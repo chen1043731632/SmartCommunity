@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
@@ -34,9 +36,9 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 		OnClickListener {
 
 	/** The ll About */
-	private LinearLayout llAbout, llexit,llsetbund,llSetLed;
+	private LinearLayout llAbout, llexit,llsetbund,llSetLed,llSetSafe;
 
-	private Switch sw_red;
+	private Switch sw_red,sw_sf;
 	/** led红灯开关 0=关 1=开. */
 	private static final String KEY_RED_SWITCH = "LED_OnOff";
 	
@@ -48,8 +50,8 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 	
 	public GizWifiDevice device=null;
 	private HashMap<String, Object> deviceStatu;
-	//private String title;
-
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -62,8 +64,10 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 		initEvent();
 		if (device==null) {
 			llSetLed.setVisibility(View.GONE);
+			llSetSafe.setVisibility(View.GONE);
 		}else{
 			llSetLed.setVisibility(View.VISIBLE);
+			llSetSafe.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -78,7 +82,10 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 		llAbout = (LinearLayout) findViewById(R.id.llAbout);
 		llexit = (LinearLayout) findViewById(R.id.llexit);
 		llsetbund= (LinearLayout) findViewById(R.id.llsetbund);
+		llSetSafe=(LinearLayout) findViewById(R.id.llSetSafe);
 		sw_red=(Switch) findViewById(R.id.sw_red);
+		sw_sf=(Switch) findViewById(R.id.sw_sf);
+		sw_sf.setChecked(spf.getBoolean("issafe", true));
 	}
 
 	// GosPushManager gosPushManager;
@@ -98,9 +105,23 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
-				
 			}
 		});
+		sw_sf.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(sw_sf.isChecked()){
+					spf.edit().putBoolean("issafe", true).commit();
+					Toast.makeText(getApplicationContext(), "监听状态，可接收警报信息",Toast.LENGTH_SHORT ).show();
+				}else{
+					spf.edit().putBoolean("issafe", false).commit();
+					Toast.makeText(getApplicationContext(), "撤防状态，不再接收警报信息",Toast.LENGTH_SHORT ).show();
+				}
+			}
+		});
+		
 	}
 
 	@Override

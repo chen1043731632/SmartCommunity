@@ -53,7 +53,7 @@ public class SetBundMesActivity extends GosBaseActivity {
 								ed_appscrect.getText().toString()).commit();
 				
 				Toast.makeText(getApplicationContext(),
-						"存储信息完毕,重新启动APP中...请稍等候.", Toast.LENGTH_SHORT).show();
+						"存储信息完毕,重新启动APP中...请稍等候..", Toast.LENGTH_SHORT).show();
 				Intent reintent = getBaseContext().getPackageManager()
 						.getLaunchIntentForPackage(
 								getBaseContext().getPackageName());

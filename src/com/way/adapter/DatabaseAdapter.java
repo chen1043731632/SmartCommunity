@@ -67,7 +67,6 @@ public class DatabaseAdapter {
 		if(airMesinfo.get_id()!=0){
 			values.put(GizMetaData.Aircondition._ID,  airMesinfo.get_id());
 		}
-		
 		values.put(GizMetaData.Aircondition.AIR_NAME,  airMesinfo.getName());
 		values.put(GizMetaData.Aircondition.AIR_BRAND,  airMesinfo.getBrand());
 		values.put(GizMetaData.Aircondition.AIR_TEM,  airMesinfo.getTemperature());
@@ -156,7 +155,9 @@ public class DatabaseAdapter {
 
 	public Gizinfo findById(int id){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		String[] columns={GizMetaData.GizTable.GIZ_ID,GizMetaData.GizTable.GIZ_NAME,GizMetaData.GizTable.GIZ_ADDRESS,GizMetaData.GizTable.GIZ_BINDGIZ,GizMetaData.GizTable.GIZ_USERID,GizMetaData.GizTable.GIZ_FLAG};
+		String[] columns={GizMetaData.GizTable.GIZ_ID,GizMetaData.GizTable.GIZ_NAME,
+				GizMetaData.GizTable.GIZ_ADDRESS,GizMetaData.GizTable.GIZ_BINDGIZ,
+				GizMetaData.GizTable.GIZ_USERID,GizMetaData.GizTable.GIZ_FLAG};
 		String whereClause =GizMetaData.GizTable.GIZ_ID+"=?";
 		String[] whereArgs = {String.valueOf(id)};
 		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)
@@ -180,7 +181,9 @@ public class DatabaseAdapter {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String whereClause =GizMetaData.GizTable.GIZ_BINDGIZ+"=?";
 		String[] whereArgs = {bindgiz};
-		String[] columns={GizMetaData.GizTable.GIZ_ID,GizMetaData.GizTable.GIZ_NAME,GizMetaData.GizTable.GIZ_ADDRESS,GizMetaData.GizTable.GIZ_BINDGIZ,GizMetaData.GizTable.GIZ_USERID,GizMetaData.GizTable.GIZ_FLAG};
+		String[] columns={GizMetaData.GizTable.GIZ_ID,GizMetaData.GizTable.GIZ_NAME,
+				GizMetaData.GizTable.GIZ_ADDRESS,GizMetaData.GizTable.GIZ_BINDGIZ,
+				GizMetaData.GizTable.GIZ_USERID,GizMetaData.GizTable.GIZ_FLAG};
 		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)
 		Cursor c = db.query(true, GizMetaData.GizTable.TABLE_NAME, columns, whereClause, whereArgs, null, null, null, null);
 		ArrayList<Gizinfo> gizs = new ArrayList<Gizinfo>(); 
@@ -205,9 +208,12 @@ public class DatabaseAdapter {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String whereClause =GizMetaData.AlertTable.GIZ_BINDGIZ+"=?";
 		String[] whereArgs = {bindgiz};
-		String[] columns={GizMetaData.AlertTable._ID,GizMetaData.AlertTable.ALERT_NAME,GizMetaData.AlertTable.ALERT_TIME,GizMetaData.AlertTable.GIZ_BINDGIZ,GizMetaData.AlertTable.GIZ_USERID,GizMetaData.AlertTable.GIZ_FLAG};
-		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)GizMetaData.AlertTable._ID+" DESC"
-		Cursor c = db.query(true, GizMetaData.AlertTable.TABLE_NAME, columns, whereClause, whereArgs, null, null,GizMetaData.AlertTable._ID+" DESC", null);
+		String[] columns={GizMetaData.AlertTable._ID,GizMetaData.AlertTable.ALERT_NAME,
+				GizMetaData.AlertTable.ALERT_TIME,GizMetaData.AlertTable.GIZ_BINDGIZ,
+				GizMetaData.AlertTable.GIZ_USERID,GizMetaData.AlertTable.GIZ_FLAG};
+		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)
+		Cursor c = db.query(true, GizMetaData.AlertTable.TABLE_NAME, columns, whereClause,
+				whereArgs, null, null,GizMetaData.AlertTable._ID+" DESC", null);
 		ArrayList<Alertinfo> alerts = new ArrayList<Alertinfo>(); 
 		Alertinfo alertinfo =null;
 	   while(c.moveToNext()){
@@ -230,8 +236,12 @@ public class DatabaseAdapter {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		String whereClause =GizMetaData.Aircondition.GIZ_BINDGIZ+"=?";
 		String[] whereArgs = {bindgiz};
-		String[] columns={GizMetaData.Aircondition._ID,GizMetaData.Aircondition.AIR_NAME,GizMetaData.Aircondition.AIR_BRAND,GizMetaData.Aircondition.AIR_TEM,GizMetaData.Aircondition.AIR_MODE,GizMetaData.Aircondition.AIR_WS,GizMetaData.Aircondition.AIR_WD,GizMetaData.Aircondition.GIZ_BINDGIZ,GizMetaData.Aircondition.GIZ_USERID,GizMetaData.Aircondition.GIZ_FLAG};
-		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)GizMetaData.AlertTable._ID+" DESC"
+		String[] columns={GizMetaData.Aircondition._ID,GizMetaData.Aircondition.AIR_NAME,
+				GizMetaData.Aircondition.AIR_BRAND,GizMetaData.Aircondition.AIR_TEM,
+				GizMetaData.Aircondition.AIR_MODE,GizMetaData.Aircondition.AIR_WS,
+				GizMetaData.Aircondition.AIR_WD,GizMetaData.Aircondition.GIZ_BINDGIZ,
+				GizMetaData.Aircondition.GIZ_USERID,GizMetaData.Aircondition.GIZ_FLAG};
+		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)
 		Cursor c = db.query(true, GizMetaData.Aircondition.TABLE_NAME, columns, whereClause, whereArgs, null, null,GizMetaData.Aircondition._ID+" DESC", null);
 		ArrayList<AirMesinfo> alerts = new ArrayList<AirMesinfo>(); 
 		AirMesinfo airMesinfo =null;
@@ -285,7 +295,9 @@ public class DatabaseAdapter {
 	
 	public ArrayList<Gizinfo> findAll(){
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		String[] columns={GizMetaData.GizTable.GIZ_ID,GizMetaData.GizTable.GIZ_NAME,GizMetaData.GizTable.GIZ_ADDRESS,GizMetaData.GizTable.GIZ_BINDGIZ,GizMetaData.GizTable.GIZ_USERID,GizMetaData.GizTable.GIZ_FLAG};
+		String[] columns={GizMetaData.GizTable.GIZ_ID,GizMetaData.GizTable.GIZ_NAME,
+				GizMetaData.GizTable.GIZ_ADDRESS,GizMetaData.GizTable.GIZ_BINDGIZ,
+				GizMetaData.GizTable.GIZ_USERID,GizMetaData.GizTable.GIZ_FLAG};
 		//参数说明(是否去除重复记录,表明,要查询的列，查询条件，查询条件的值，分组条件，分组条件的值，排序，排序条件)
 		Cursor c = db.query(true, GizMetaData.GizTable.TABLE_NAME, columns, null, null, null, null, null, null);
 		ArrayList<Gizinfo> gizs = new ArrayList<Gizinfo>(); 

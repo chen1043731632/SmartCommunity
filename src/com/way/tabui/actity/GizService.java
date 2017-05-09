@@ -185,7 +185,6 @@ public class GizService extends Service {
 
 	private void initsdk() {
 		spf = getSharedPreferences(GosConstant.SPF_Name, Context.MODE_PRIVATE);
-
 		try {
 			GosConstant.App_ID = spf.getString("appid",
 					"a61ed92da3764cca848f3dbab8481149");
@@ -295,6 +294,7 @@ public class GizService extends Service {
 						"yyyy年MM月dd日 HH:mm:ss ");
 				Date curDate = new Date(System.currentTimeMillis());// 获取当前时间
 				String str = formatter.format(curDate);
+				if(spf.getBoolean("issafe", true)){
 				gasstua = (Boolean) deviceStatu.get(KEY_Gas);
 				if (lastgasstua != gasstua) {
 					lastgasstua = gasstua;
@@ -330,7 +330,7 @@ public class GizService extends Service {
 				}
 
 				smokestua = (Boolean) deviceStatu.get(KEY_Smoke);
-				if (lastsmokestua != smokestua) {
+				if (lastsmokestua != smokestua){
 					lastsmokestua = smokestua;
 					if (lastsmokestua) {
 						Alertinfo alertinfo = new Alertinfo("烟雾报警器", str,
@@ -340,8 +340,17 @@ public class GizService extends Service {
 								"烟雾");
 					}
 				}
-				
-				
+				}else{
+					gasstua = false;
+					smokestua = false;
+					gatestua = false;
+					bodystua = false;
+					lastgasstua = false;
+					lastsmokestua = false;
+					lastgatestua = false;
+					lastbodystua = false;
+
+				}
 
 
 				color = deviceStatu.get(KEY_LIGHT_COLOR).toString();
@@ -461,6 +470,7 @@ public class GizService extends Service {
 	}
 	
 	private void notifbulid(String mes, int icon, int id, String mestit) {
+		if(spf.getBoolean("issafe", true)){
 		NotificationCompat.Builder bulider = new NotificationCompat.Builder(
 				this);
 		bulider.setSmallIcon(icon);
@@ -471,6 +481,7 @@ public class GizService extends Service {
 		Notification notification = bulider.build();
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(id, notification);
+		}
 	}
 
 	@SuppressWarnings("rawtypes")

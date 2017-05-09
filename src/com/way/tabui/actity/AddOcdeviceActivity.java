@@ -1,7 +1,5 @@
 package com.way.tabui.actity;
 
-
-
 import com.way.adapter.DatabaseAdapter;
 import com.way.tabui.gokit.R;
 import com.way.tabui.gokit.R.id;
@@ -21,40 +19,46 @@ import android.widget.Toast;
 
 public class AddOcdeviceActivity extends Activity {
 
-	private EditText  ed_name,ed_address; 
+	private EditText ed_name, ed_address;
 	private Button bt_addocdevice;
 	private DatabaseAdapter dbAdapter;
 	private String bindgiz;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_ocdevice);
-		dbAdapter=new DatabaseAdapter(this);
-		Intent intent=getIntent();
-		bindgiz=intent.getStringExtra("bindgiz");
-	//	Toast.makeText(getApplicationContext(), bindgiz, Toast.LENGTH_SHORT).show();
-		initview ();
-		initevent ();
-		
+		dbAdapter = new DatabaseAdapter(this);
+		Intent intent = getIntent();
+		bindgiz = intent.getStringExtra("bindgiz");
+		// Toast.makeText(getApplicationContext(), bindgiz,
+		// Toast.LENGTH_SHORT).show();
+		initview();
+		initevent();
+
 	}
-	private void initview (){
-		
-		ed_name=(EditText) findViewById(R.id.ed_name);
-		ed_address=(EditText) findViewById(R.id.ed_address);
-		bt_addocdevice=(Button) findViewById(R.id.bt_addocdevice);
+
+	private void initview() {
+
+		ed_name = (EditText) findViewById(R.id.ed_name);
+		ed_address = (EditText) findViewById(R.id.ed_address);
+		bt_addocdevice = (Button) findViewById(R.id.bt_addocdevice);
 	}
-	private void initevent (){
+
+	private void initevent() {
 		bt_addocdevice.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Gizinfo gizinfo= new Gizinfo(ed_name.getText().toString(),ed_address.getText().toString(),bindgiz,"NULL",0);
+				Gizinfo gizinfo = new Gizinfo(ed_name.getText().toString(),
+						ed_address.getText().toString(), bindgiz, "NULL", 0);
 				dbAdapter.add(gizinfo);
-				Toast.makeText(getApplicationContext(), "添加完毕", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "添加完毕",
+						Toast.LENGTH_SHORT).show();
 			}
 		});
-		
+
 	}
-	
+
 }

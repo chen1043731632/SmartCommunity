@@ -208,16 +208,10 @@ public class GosDeviceListActivity extends GosDeviceModuleBaseActivity implement
 				progressDialog.show();
 				String mac=spf.getString("msgobj", "nodevice");
 				ubdevice=(GizWifiDevice) msg.obj;
-//				if(devices!=null){
 				if(mac.equals(ubdevice.getMacAddress()))
 					isequally=true;
 				else
 					isequally=false;
-//				}
-//			else{
-//					isequally=false;
-//				}
-				
 				GizWifiSDK.sharedInstance().unbindDevice(uid, token, ubdevice.getDid());
 				break;
 
@@ -230,19 +224,12 @@ public class GosDeviceListActivity extends GosDeviceModuleBaseActivity implement
 			case TOCONTROL:
 			
 				intent = new Intent(GosDeviceListActivity.this,MainActivity.class);
-			//	Toast.makeText(getApplicationContext(), "ismain:"+ismain, Toast.LENGTH_SHORT).show();
-//				if(ismain)
-//				{
-//					intent = new Intent(GosDeviceListActivity.this, GosDeviceControlActivity.class);
-////					intent.putExtra("isfromdl", true);
-//				}
 				Bundle bundle = new Bundle();
 				bundle.putParcelable("GizWifiDevice", (GizWifiDevice) msg.obj);
 				intent.putExtras(bundle);
 				 intent.putExtra("isoffline",false);
 				 if(!ismain){
 					 startActivity(intent);
-//				startActivityForResult(intent, 10);
 				finish();
 				 }else{
 					setResult(1001, intent);
@@ -943,7 +930,6 @@ int   count=0;
 		flag=false;
 		}
 	else{
-//		Toast.makeText(GosDeviceListActivity.this, "is null", Toast.LENGTH_SHORT).show();
 		device.setListener(gizWifiDeviceListener);
 		flag=true;
 	}
@@ -997,7 +983,6 @@ int   count=0;
 		} else {
 			toastText = (String) getText(R.string.set_info_failed) + "\n" + arg0;
 		}
-//		Toast.makeText(GosDeviceListActivity.this, "info ok"+toastText, Toast.LENGTH_SHORT).show();
 		msg.obj = toastText;
 		handler.sendMessage(msg);
 	}

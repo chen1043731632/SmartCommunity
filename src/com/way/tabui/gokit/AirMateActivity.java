@@ -44,7 +44,7 @@ public class AirMateActivity extends GosBaseActivity {
 	private GizWifiDevice device = null;
 	private DatabaseAdapter dbAdapter;
 	private ImageButton ib_pre, ib_ceshi, ib_next;
-	private TextView tv_pro,tv_brand;
+	private TextView tv_pro, tv_brand;
 	private int min, max, brand, index;
 	private String name = "Null";
 	private Button bt_diybrand;
@@ -57,10 +57,10 @@ public class AirMateActivity extends GosBaseActivity {
 
 	/** 空调命令 */
 	private static final String KEY_Sendair = "Send_aircon";
-	
+
 	private int windex = 1;
 
-	private boolean isstart=true;
+	private boolean isstart = true;
 	private Dialog dialog;
 
 	@Override
@@ -88,9 +88,9 @@ public class AirMateActivity extends GosBaseActivity {
 		ib_ceshi = (ImageButton) findViewById(R.id.ib_ceshi);
 
 		tv_pro = (TextView) findViewById(R.id.tv_pro);
-		tv_brand=(TextView)findViewById(R.id.tv_brand);
-		
-		bt_diybrand=(Button) findViewById(R.id.bt_diybrand);
+		tv_brand = (TextView) findViewById(R.id.tv_brand);
+
+		bt_diybrand = (Button) findViewById(R.id.bt_diybrand);
 		ib_pre.setEnabled(false);
 
 	}
@@ -105,12 +105,12 @@ public class AirMateActivity extends GosBaseActivity {
 		setProText();
 	}
 
-//	Thread myThread = new Thread(new MyThread());
+	// Thread myThread = new Thread(new MyThread());
 
 	private void initEvent() {
 
 		bt_diybrand.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -158,22 +158,22 @@ public class AirMateActivity extends GosBaseActivity {
 				boolean isopen = false;
 				switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
-//					isonclick=false;
+					// isonclick=false;
 					if (!isopen) {
-						
-						isstart=true;
+
+						isstart = true;
 						initTimer();
-						//myThread.start();
+						// myThread.start();
 						Log.i("==", "Thread is start");
 						isopen = true;
 					}
 					break;
 
 				case MotionEvent.ACTION_UP:
-//					isonclick=false;
-					isstart=false;
+					// isonclick=false;
+					isstart = false;
 					initTimer();
-//					myThread.interrupt();
+					// myThread.interrupt();
 					isopen = false;
 					windex = 1;
 					boundAlert(AirMateActivity.this);
@@ -183,20 +183,21 @@ public class AirMateActivity extends GosBaseActivity {
 				return false;
 			}
 		});
-		
-//		ib_ceshi.setOnClickListener(new OnClickListener() {
-//			
-//			@Override
-//			public void onClick(View v) {
-//				// TODO Auto-generated method stub
-//				isonclick=true;
-//				isstart=true;
-//				initTimer();
-//			}
-//		});
-		
+
+		// ib_ceshi.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// // TODO Auto-generated method stub
+		// isonclick=true;
+		// isstart=true;
+		// initTimer();
+		// }
+		// });
+
 	}
-//	boolean isonclick;
+
+	// boolean isonclick;
 	protected void boundAlert(Context context) {
 		String title, message, nbtext, pbtext;
 		title = (String) getText(R.string.prompt);
@@ -221,7 +222,7 @@ public class AirMateActivity extends GosBaseActivity {
 						}
 					}
 				});
-		
+
 		builder.setPositiveButton(pbtext,
 				new DialogInterface.OnClickListener() {
 					@Override
@@ -244,7 +245,7 @@ public class AirMateActivity extends GosBaseActivity {
 		int sum;
 		sum = max - min + 1;
 		tv_pro.setText("测试按键（" + index + "/" + sum + ")");
-		tv_brand.setText("当前测试遥控码:"+brand);
+		tv_brand.setText("当前测试遥控码:" + brand);
 	}
 
 	Handler handler = new Handler() {
@@ -265,7 +266,7 @@ public class AirMateActivity extends GosBaseActivity {
 			case 2:
 				try {
 					sendJson(KEY_Sendair, OPEN);
-					
+
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -281,18 +282,18 @@ public class AirMateActivity extends GosBaseActivity {
 					e.printStackTrace();
 				}
 				windex++;
-				
-//				if(isonclick)
-//					{
-//					isstart=false;
-//					windex = 1;
-//					boundAlert(AirMateActivity.this);
-//					}
-				
+
+				// if(isonclick)
+				// {
+				// isstart=false;
+				// windex = 1;
+				// boundAlert(AirMateActivity.this);
+				// }
+
 				break;
-				
+
 			case 4:
-				
+
 				if (brand != max) {
 					brand++;
 					index++;
@@ -306,32 +307,28 @@ public class AirMateActivity extends GosBaseActivity {
 			super.handleMessage(msg);
 		}
 	};
-	
-	
+
 	private void setBrandInfo() {
-		dialog = new AlertDialog.Builder(this).setView(new EditText(this)).create();
+		dialog = new AlertDialog.Builder(this).setView(new EditText(this))
+				.create();
 		dialog.show();
 		Window window = dialog.getWindow();
 		window.setContentView(R.layout.alert_diy_air_brand);
 
 		final EditText etminbrand;
 		final EditText etmaxbrand;
-		
+
 		etminbrand = (EditText) window.findViewById(R.id.etminbrand);
 		etmaxbrand = (EditText) window.findViewById(R.id.etmaxbrand);
 
 		LinearLayout llNo, llSure;
-		
+
 		llNo = (LinearLayout) window.findViewById(R.id.llNo);
 		llSure = (LinearLayout) window.findViewById(R.id.llSure);
 
-		
-		
-		etminbrand.setText(""+min);
-		
-	
-		etmaxbrand.setText(""+max);
-	
+		etminbrand.setText("" + min);
+
+		etmaxbrand.setText("" + max);
 
 		llNo.setOnClickListener(new OnClickListener() {
 
@@ -348,48 +345,54 @@ public class AirMateActivity extends GosBaseActivity {
 				int minbrand;
 				int maxbrand;
 				try {
-				minbrand=Integer.parseInt(etminbrand.getText().toString());
-				maxbrand=Integer.parseInt(etmaxbrand.getText().toString());
-				if(minbrand<=maxbrand){
-					min=minbrand;
-					max=maxbrand;
-					brand = min;
-					index = 1;
-					setProText();
-					Toast.makeText(getApplicationContext(), "修改成功", Toast.LENGTH_SHORT).show();
-					dialog.cancel();
-				}else{
-					Toast.makeText(getApplicationContext(), "起始值不可超过结束值", Toast.LENGTH_SHORT).show();
-				}
-				
+					minbrand = Integer
+							.parseInt(etminbrand.getText().toString());
+					maxbrand = Integer
+							.parseInt(etmaxbrand.getText().toString());
+					if (minbrand <= maxbrand) {
+						min = minbrand;
+						max = maxbrand;
+						brand = min;
+						index = 1;
+						setProText();
+						Toast.makeText(getApplicationContext(), "修改成功",
+								Toast.LENGTH_SHORT).show();
+						dialog.cancel();
+					} else {
+						Toast.makeText(getApplicationContext(), "起始值不可超过结束值",
+								Toast.LENGTH_SHORT).show();
+					}
+
 				} catch (Exception e) {
 					// TODO: handle exception
-					Toast.makeText(getApplicationContext(), "数据错误,修改失败", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), "数据错误,修改失败",
+							Toast.LENGTH_SHORT).show();
 					dialog.cancel();
 				}
-			
-				
+
 			}
 		});
 	}
-//	public class MyThread implements Runnable {
-//		@Override
-//		public void run() {
-//			// TODO Auto-generated method stub
-//			while (isstart) {
-//				try {
-//					Thread.sleep(500);// 线程暂停10秒，单位毫秒
-//					Message message = new Message();
-//					message.what = windex;
-//					handler.sendMessage(message);// 发送消息
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					Log.i("==", "线程出错"+e.toString());
-//				}
-//			}
-//		}
-//	}
+
+	// public class MyThread implements Runnable {
+	// @Override
+	// public void run() {
+	// // TODO Auto-generated method stub
+	// while (isstart) {
+	// try {
+	// Thread.sleep(500);// 线程暂停10秒，单位毫秒
+	// Message message = new Message();
+	// message.what = windex;
+	// handler.sendMessage(message);// 发送消息
+	// } catch (InterruptedException e) {
+	// // TODO Auto-generated catch block
+	// Log.i("==", "线程出错"+e.toString());
+	// }
+	// }
+	// }
+	// }
 	private Thread thread;
+
 	public void initTimer() {
 
 		thread = new Thread(new Runnable() {
@@ -398,24 +401,24 @@ public class AirMateActivity extends GosBaseActivity {
 			public void run() {
 				// TODO Auto-generated method stub
 				while (isstart) {
-			    	Message mas= new Message();
-				    mas.what=windex;
+					Message mas = new Message();
+					mas.what = windex;
 					handler.sendMessage(mas);
-					if(windex==3){
+					if (windex == 3) {
 						try {
 							Thread.sleep(1000);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
-							Log.i("==", "线程出错"+e.toString());
+							Log.i("==", "线程出错" + e.toString());
 						}
-				}else{
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						Log.i("==", "线程出错"+e.toString());
+					} else {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							Log.i("==", "线程出错" + e.toString());
+						}
 					}
-				}
 				}
 			}
 		});

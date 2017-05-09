@@ -65,7 +65,8 @@ import com.way.util.Gizinfo;
  * @author dswitkin@google.com (Daniel Switkin)
  * @author Sean Owen
  */
-public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
+public final class CaptureActivity extends Activity implements
+		SurfaceHolder.Callback {
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
@@ -83,7 +84,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	private Button btnCancel;
 	private ImageView ivReturn;
 	private String uid, token, mac, productKey, productSecret;
-    private String name,address,bindgiz;
+	private String name, address, bindgiz;
 	protected SharedPreferences spf;
 
 	private GizWifiSDKListener gizWifiSDKListener = new GizWifiSDKListener() {
@@ -101,7 +102,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	 * @param result
 	 * @param did
 	 */
-	protected void didBindDevice(int error, String errorMessage, java.lang.String did) {
+	protected void didBindDevice(int error, String errorMessage,
+			java.lang.String did) {
 		if (error == 0) {
 			mHandler.sendEmptyMessage(handler_key.SUCCESS.ordinal());
 		} else {
@@ -125,8 +127,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
 		SUCCESS,
 
-		FAILED,
-		ADD_DATA,
+		FAILED, ADD_DATA,
 
 	}
 
@@ -142,8 +143,10 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			switch (key) {
 
 			case START_BIND:
-				if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(token) && !TextUtils.isEmpty(mac)
-						&& !TextUtils.isEmpty(productKey) && !TextUtils.isEmpty(productSecret)) {
+				if (!TextUtils.isEmpty(uid) && !TextUtils.isEmpty(token)
+						&& !TextUtils.isEmpty(mac)
+						&& !TextUtils.isEmpty(productKey)
+						&& !TextUtils.isEmpty(productSecret)) {
 					startBind(uid, token, mac, productKey, productSecret);
 				} else {
 					startBind(passcode, did);
@@ -160,13 +163,15 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 				finish();
 				break;
 			case ADD_DATA:
-				Gizinfo gizinfo= new Gizinfo(name,address,bindgiz,"NULL",0);
+				Gizinfo gizinfo = new Gizinfo(name, address, bindgiz, "NULL", 0);
 				dbAdapter.add(gizinfo);
-				Toast.makeText(getApplicationContext(), "添加数据完毕", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), "添加数据完毕",
+						Toast.LENGTH_SHORT).show();
 				finish();
 				break;
 			case FAILED:
-				Toast.makeText(CaptureActivity.this, R.string.add_failed, Toast.LENGTH_SHORT).show();
+				Toast.makeText(CaptureActivity.this, R.string.add_failed,
+						Toast.LENGTH_SHORT).show();
 				finish();
 			}
 		}
@@ -175,15 +180,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	@SuppressWarnings("deprecation")
 	private void startBind(final String passcode, final String did) {
 
-		GizWifiSDK.sharedInstance().bindDevice(spf.getString("Uid", ""), spf.getString("Token", ""), did, passcode,
-				null);
-		// mCenter.cBindDevice(setmanager.getUid(), setmanager.getToken(), did,
-		// passcode, "");
-
+		GizWifiSDK.sharedInstance().bindDevice(spf.getString("Uid", ""),
+				spf.getString("Token", ""), did, passcode, null);
 	}
-
-	private void startBind(String uid, String token, String mac, String productKey, String productSecret) {
-		GizWifiSDK.sharedInstance().bindRemoteDevice(uid, token, mac, productKey, productSecret);
+	private void startBind(String uid, String token, String mac,
+			String productKey, String productSecret) {
+		GizWifiSDK.sharedInstance().bindRemoteDevice(uid, token, mac,
+				productKey, productSecret);
 	}
 
 	private Rect mCropRect = null;
@@ -197,7 +200,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	private boolean isHasSurface = false;
-	private boolean isfromoc =false;
+	private boolean isfromoc = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -210,14 +213,14 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
 
-		dbAdapter=new DatabaseAdapter(this);
+		dbAdapter = new DatabaseAdapter(this);
 		// 每次返回activity都要注册一次sdk监听器，保证sdk状态能正确回调
 		GizWifiSDK.sharedInstance().setListener(gizWifiSDKListener);
 
 		spf = getSharedPreferences("set", Context.MODE_PRIVATE);
 
 		Intent intent = getIntent();
-		isfromoc =intent.getBooleanExtra("fromoc", false);
+		isfromoc = intent.getBooleanExtra("fromoc", false);
 		Window window = getWindow();
 		window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		setContentView(R.layout.activity_gos_capture);
@@ -229,9 +232,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
 		inactivityTimer = new InactivityTimer(this);
 
-		TranslateAnimation animation = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
-				Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT,
-				0.0f);
+		TranslateAnimation animation = new TranslateAnimation(
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f,
+				Animation.RELATIVE_TO_PARENT, -1.0f,
+				Animation.RELATIVE_TO_PARENT, 0.0f);
 		animation.setDuration(4500);
 		animation.setRepeatCount(-1);
 		animation.setRepeatMode(Animation.RESTART);
@@ -303,7 +308,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		if (holder == null) {
-			Log.e(TAG, "*** WARNING *** surfaceCreated() gave us a null surface!");
+			Log.e(TAG,
+					"*** WARNING *** surfaceCreated() gave us a null surface!");
 		}
 		if (!isHasSurface) {
 			isHasSurface = true;
@@ -317,7 +323,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
 
 	}
 
@@ -333,17 +340,20 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 	 */
 	public void handleDecode(Result rawResult, Bundle bundle) {
 		String text = rawResult.getText();
-		if ((!isfromoc)&&text.contains("product_key=") && text.contains("did=") && text.contains("passcode=")) {
+		if ((!isfromoc) && text.contains("product_key=")
+				&& text.contains("did=") && text.contains("passcode=")) {
 
 			inactivityTimer.onActivity();
 			product_key = getParamFomeUrl(text, "product_key");
 			did = getParamFomeUrl(text, "did");
 			passcode = getParamFomeUrl(text, "passcode");
 
-			Toast.makeText(CaptureActivity.this, R.string.scanning_successful, Toast.LENGTH_SHORT).show();
+			Toast.makeText(CaptureActivity.this, R.string.scanning_successful,
+					Toast.LENGTH_SHORT).show();
 			mHandler.sendEmptyMessage(handler_key.START_BIND.ordinal());
 
-		} else if ((!isfromoc)&&text.contains("uid") && text.contains("token") && text.contains("productKey")
+		} else if ((!isfromoc) && text.contains("uid")
+				&& text.contains("token") && text.contains("productKey")
 				&& text.contains("productSecret")) {
 			inactivityTimer.onActivity();
 			uid = getParamFomeUrl(text, "uid");
@@ -351,18 +361,21 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			mac = getParamFomeUrl(text, "mac");
 			productKey = getParamFomeUrl(text, "productKey");
 			productSecret = getParamFomeUrl(text, "productSecret");
-			Toast.makeText(CaptureActivity.this, R.string.scanning_successful, Toast.LENGTH_SHORT).show();
+			Toast.makeText(CaptureActivity.this, R.string.scanning_successful,
+					Toast.LENGTH_SHORT).show();
 			mHandler.sendEmptyMessage(handler_key.START_BIND.ordinal());
-		}else if((isfromoc)&&text.contains("name")&&text.contains("address")){
+		} else if ((isfromoc) && text.contains("name")
+				&& text.contains("address")) {
 			name = getParamFomeUrl(text, "name");
 			address = getParamFomeUrl(text, "address");
-			Intent intent=getIntent();
-			bindgiz=intent.getStringExtra("bindgiz");
-			Toast.makeText(CaptureActivity.this, R.string.scanning_successful, Toast.LENGTH_SHORT).show();
+			Intent intent = getIntent();
+			bindgiz = intent.getStringExtra("bindgiz");
+			Toast.makeText(CaptureActivity.this, R.string.scanning_successful,
+					Toast.LENGTH_SHORT).show();
 			mHandler.sendEmptyMessage(handler_key.ADD_DATA.ordinal());
-		} 
-		else {
-			handler = new CaptureActivityHandler(this, cameraManager, DecodeThread.ALL_MODE);
+		} else {
+			handler = new CaptureActivityHandler(this, cameraManager,
+					DecodeThread.ALL_MODE);
 		}
 	}
 
@@ -400,7 +413,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			throw new IllegalStateException("No SurfaceHolder provided");
 		}
 		if (cameraManager.isOpen()) {
-			Log.w(TAG, "initCamera() while already open -- late SurfaceView callback?");
+			Log.w(TAG,
+					"initCamera() while already open -- late SurfaceView callback?");
 			return;
 		}
 		try {
@@ -408,7 +422,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 			// Creating the handler starts the preview, which can also throw a
 			// RuntimeException.
 			if (handler == null) {
-				handler = new CaptureActivityHandler(this, cameraManager, DecodeThread.ALL_MODE);
+				handler = new CaptureActivityHandler(this, cameraManager,
+						DecodeThread.ALL_MODE);
 			}
 
 			initCrop();

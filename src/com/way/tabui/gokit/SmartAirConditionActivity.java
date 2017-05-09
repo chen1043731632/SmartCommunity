@@ -387,7 +387,6 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 		hashMap.put(key, value);
 		device.write(hashMap, 0);
 		Log.i("==", hashMap.toString());
-		// Log.i("Apptest", hashMap.toString());
 	}
 
 	@Override

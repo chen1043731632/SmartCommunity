@@ -185,7 +185,6 @@ public class SampleFragment extends Fragment {
 			// Log.v("==", ""+data[i][1]);
 		}
 
-
 		return v;
 	}
 
@@ -282,17 +281,31 @@ public class SampleFragment extends Fragment {
 	public void onResume() {
 		// TODO Auto-generated method stub
 		try {
-			
+			spf = getActivity().getSharedPreferences(GosConstant.SPF_Name,
+			Context.MODE_PRIVATE);
+			boolean issafe=spf.getBoolean("issafe", true);
 		if (!getofisoffline()) {
 			if (TextUtils.isEmpty(((MainActivity) getActivity()).device
 					.getAlias())) {
+				if(issafe){
 				title.setText(getArguments().getString(ARG_TEXT)
 						+ "-"
 						+ ((MainActivity) getActivity()).device
-								.getProductName());
+								.getProductName()+"-监听-");
+				}else{
+					title.setText(getArguments().getString(ARG_TEXT)
+							+ "-"
+							+ ((MainActivity) getActivity()).device
+									.getProductName()+"-撤防-");
+				}
 			} else {
+				if(issafe){
 				title.setText(getArguments().getString(ARG_TEXT) + "-"
-						+ ((MainActivity) getActivity()).device.getAlias());
+						+ ((MainActivity) getActivity()).device.getAlias()+"-监听-");
+				}else{
+					title.setText(getArguments().getString(ARG_TEXT) + "-"
+							+ ((MainActivity) getActivity()).device.getAlias()+"-撤防-");
+				}
 			}
 		} else
 			title.setText(getArguments().getString(ARG_TEXT) + "-" + "网关离线中");
@@ -305,8 +318,25 @@ public class SampleFragment extends Fragment {
 			try {
 				// stask.start();
 				starreceiver();
+//				spf = getActivity().getSharedPreferences(GosConstant.SPF_Name,
+//						Context.MODE_PRIVATE);
+//				//boolean issafe=spf.getBoolean("issafe", true);
+//				if(spf.getBoolean("issafe", true)){
+//					imabody.setVisibility(View.VISIBLE);
+//					imagas.setVisibility(View.VISIBLE);
+//					imagate.setVisibility(View.VISIBLE);
+//					imasmoke.setVisibility(View.VISIBLE);
+//				}else{
+//					//dgv.removeView(imabody);
+//					//poem.remove();
+//					imabody.setVisibility(View.GONE);
+//					imagas.setVisibility(View.GONE);
+//					imagate.setVisibility(View.GONE);
+//					imasmoke.setVisibility(View.GONE);
+//				}
 			} catch (Exception e) {
 				// TODO: handle exception
+				
 			}
 		}
 		super.onResume();
@@ -360,7 +390,6 @@ public class SampleFragment extends Fragment {
 				mas.what = TeHuChe;
 				mHandler.sendMessage(mas);
 			}
-		
 			if (gasstua) {
 				Message mas = new Message();
 				mas.what = GasAlert;
@@ -402,78 +431,96 @@ public class SampleFragment extends Fragment {
 				mas.what = SmokeSafe;
 				mHandler.sendMessage(mas);
 			}
-
-		}
+		   }
+		
 	}
 
+	
 	private Handler mHandler = new Handler() {
 		public void handleMessage(Message msg) {
-
+			spf = getActivity().getSharedPreferences(GosConstant.SPF_Name,
+					Context.MODE_PRIVATE);
+			boolean issafe=spf.getBoolean("issafe", true);
 			switch (msg.what) {
 			case GasAlert:
+				if(issafe){
 				try {
 					imagas.setImageResource(R.drawable.ic_gas_a);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+				}
 				break;
 			case GasSafe:
+				
 				try {
 					imagas.setImageResource(R.drawable.ic_gas_b);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-
+		
 				break;
 
 			case DoorOper:
+				if(issafe){
 				try {
 					imagate.setImageResource(R.drawable.ic_gate_a);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+				}
 
 				break;
 			case DoorClose:
+				
 				try {
 					imagate.setImageResource(R.drawable.ic_gate_b);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
-
+				
 				break;
 
 			case SmokeAlert:
+				if(issafe){
 				try {
 					imasmoke.setImageResource(R.drawable.ic_smoke_a);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+				}
+				
 
 				break;
 			case SmokeSafe:
+				
 				try {
 					imasmoke.setImageResource(R.drawable.ic_smoke_b);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+				
 
 				break;
 
 			case BodyPass:
+				if(issafe){
 				try {
 					imabody.setImageResource(R.drawable.ic_body_a);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+				}
 
 				break;
 			case BodyNot:
+				
 				try {
 					imabody.setImageResource(R.drawable.ic_body_b);
 				} catch (Exception e) {
 					// TODO: handle exception
 				}
+				
 				break;
 			case TeHuChe:
 				try {
@@ -510,38 +557,7 @@ public class SampleFragment extends Fragment {
 	};
 
 	//
-	/**
-	 * 
-	 * 该功能已改方案
-	 * 
-	 * 
-	 * private class STask extends Thread {
-	 * 
-	 * @Override public void run() { // TODO Auto-generated method stub
-	 *           while(true){ try { //温湿度
-	 *           if((lasttem!=getoftem())||(lasthum!=getofhum())){ Message mas=
-	 *           new Message(); lasttem=temperature; lasthum=humidity;
-	 *           //if(gasmes==true) mas.what=TeHuChe; //else //mas.what=2;
-	 *           mHandler.sendMessage(mas); } //燃气 if(lastgas!=getofgas()){
-	 *           Message mas= new Message(); lastgas=gasmes; if(gasmes==true)
-	 *           mas.what=GasAlert; else mas.what=GasSafe;
-	 *           mHandler.sendMessage(mas); } //门磁 if(lastgate!=getofgate()){
-	 *           Message mas= new Message(); lastgate=gatemes; if(gatemes==true)
-	 *           mas.what=DoorOper; else mas.what=DoorClose;
-	 *           mHandler.sendMessage(mas); } //烟雾 if(lastsmoke!=getofsmoke()){
-	 *           Message mas= new Message(); lastsmoke=smokemes;
-	 *           if(smokemes==true) mas.what=SmokeAlert; else
-	 *           mas.what=SmokeSafe; mHandler.sendMessage(mas); } //人体移动
-	 *           if(lastbody!=getofbody()){ Message mas= new Message();
-	 *           lastbody=bodymes; if(bodymes==true) mas.what=BodyPass; else
-	 *           mas.what=BodyNot; mHandler.sendMessage(mas); }
-	 * 
-	 * 
-	 *           } catch (Exception e) { // TODO: handle exception } } }
-	 * 
-	 * 
-	 *           //thread.start(); }
-	 */
+	
 
 	/**
 	 * 换行切换任务
@@ -581,12 +597,7 @@ public class SampleFragment extends Fragment {
 							((MainActivity) getActivity()).sp
 									.setUsername("13135367953");
 							((MainActivity) getActivity()).loginSuc(outinfo);
-							// Intent in = new
-							// Intent(context,MainContentActivity.class);
-							// Bundle bundle = new Bundle();
-							// bundle.putSerializable("user", outinfo);
-							// in.putExtras(bundle);
-							// startActivity(in);
+					
 						}
 
 						@Override
@@ -858,6 +869,7 @@ public class SampleFragment extends Fragment {
 
 		}
 		dgv.addView(view);
+	
 		poem.add(modeuleName);
 	}
 
