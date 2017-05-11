@@ -34,14 +34,14 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 	@BindView(id = R.id.bt_open_close, click = true)
 	private Button btOpCl;
 
-	/** 模式 0：制冷 1：抽湿 2：送风 3：制热 */
-	private int[] MOD = { 327944, 328200, 324456, 328712 };
-	/** 模式图片资源索引 0：制冷 1：抽湿 2：送风 3：制热 */
+	/** 模式 0：制冷 1：抽湿 2：送风 3：制热  4:自动 */
+	private int[] MOD = { 327944, 328200, 324456, 328712,327688};
+	/** 模式图片资源索引 0：制冷 1：抽湿 2：送风 3：制热  4:自动*/
 	private int[] imaMOD = { R.drawable.btn_mode_cold_black,
 			R.drawable.btn_mode_humidity_black,
-			R.drawable.btn_winddirect_black, R.drawable.btn_mode_hot_black };
-	/** 模式文字资源索引 0：制冷 1：抽湿 2：送风 3：制热 */
-	private String[] txMOD = { "制冷", "抽湿", "送风", "制热" };
+			R.drawable.btn_winddirect_black, R.drawable.btn_mode_hot_black,R.drawable.btn_mode_auto_black };
+	/** 模式文字资源索引 0：制冷 1：抽湿 2：送风 3：制热  4：自动*/
+	private String[] txMOD = { "制冷", "抽湿", "送风", "制热","自动"};
 
 	private Button btMod;
 
@@ -70,7 +70,7 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 
 	private String[] txWS = { "自动", "低速", "中速", "高速" };
 
-	@BindView(id = R.id.bt_wind_speed, click = true)
+	
 	private Button btWS;
 
 	/** 风向 0:自动 1：手动 */
@@ -102,6 +102,8 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 	private LinearLayout llMod;
 
 	private LinearLayout llWsd;
+	
+	private TextView tv_temsign;
 
 	boolean isOpen = false;
 	int modIndex = 0;
@@ -132,7 +134,6 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 		initView();
 		initData();
 		initEvent();
-		
 	}
 
 	private void initView() {
@@ -148,6 +149,7 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 		tvTem = (TextView) findViewById(R.id.tv_tem);
 		tvWD = (TextView) findViewById(R.id.tv_wd);
 		tvWS = (TextView) findViewById(R.id.tv_ws);
+		tv_temsign =(TextView) findViewById(R.id.tv_temsign);
 
 		imMod = (ImageView) findViewById(R.id.im_mod);
 		imWD = (ImageView) findViewById(R.id.im_wd);
@@ -158,6 +160,7 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 		llWsd = (LinearLayout) findViewById(R.id.ll_wsd);
 	}
     String mac;
+    
 	private void initDevice() {
 		Intent intent = getIntent();
 		device = (GizWifiDevice) intent.getParcelableExtra("GizWifiDevice");
@@ -246,6 +249,10 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 				// TODO Auto-generated method stub
 				vSimple();
 				temperature= Integer.parseInt(tvTem.getText().toString());
+				llMod.setVisibility(View.VISIBLE);
+				llTem.setVisibility(View.VISIBLE);
+				llWsd.setVisibility(View.VISIBLE);
+				opcl=0;
 				if (temperature > 16) {
 					tvTem.setText("" + (temperature - 1));
 					temperature = Integer.parseInt(tvTem.getText().toString());
@@ -267,12 +274,17 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 				}
 			}
 		});
+		
 		btAdd.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				vSimple();
+				llMod.setVisibility(View.VISIBLE);
+				llTem.setVisibility(View.VISIBLE);
+				llWsd.setVisibility(View.VISIBLE);
+				opcl=0;
 				temperature = Integer.parseInt(tvTem.getText().toString());
 
 				if (temperature < 30) {
@@ -283,6 +295,7 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 						sendtem = sendtem + Integer.valueOf(temx, 16);
 						sendJson(KEY_Sendair, sendtem);
 						sendtem = 393216;
+						
 						updbData();
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
@@ -303,16 +316,35 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				vSimple();
+				llMod.setVisibility(View.VISIBLE);
+				llTem.setVisibility(View.VISIBLE);
+				llWsd.setVisibility(View.VISIBLE);
+				opcl=0;
 				modIndex++;
-				if (modIndex >= 4)
+				if (modIndex >= 5)
 					modIndex = 0;
-
+				
 				try {
 					sendJson(KEY_Sendair, MOD[modIndex]);
 					imMod.setBackgroundResource(imaMOD[modIndex]);
 					tvMod.setText(txMOD[modIndex]);
+					
+					if(modIndex==2){
+						llTem.setVisibility(View.INVISIBLE);
+						btAdd.setEnabled(false);
+						btSub.setEnabled(false);
+					}else{
+						llTem.setVisibility(View.VISIBLE);
+						btAdd.setEnabled(true);
+						btSub.setEnabled(true);
+					}
+					
+					if(modIndex==4||modIndex==1){
+						btWS.setEnabled(false);
+					}else{
+						btWS.setEnabled(true);
+					}
 					updbData();
-
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					Toast.makeText(getApplicationContext(), "发送失败",
@@ -328,6 +360,10 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				vSimple();
+				llMod.setVisibility(View.VISIBLE);
+				llTem.setVisibility(View.VISIBLE);
+				llWsd.setVisibility(View.VISIBLE);
+				opcl=0;
 				wsIndex++;
 				if (wsIndex >= 4)
 					wsIndex = 0;
@@ -352,10 +388,13 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				vSimple();
+				llMod.setVisibility(View.VISIBLE);
+				llTem.setVisibility(View.VISIBLE);
+				llWsd.setVisibility(View.VISIBLE);
+				opcl=0;
 				wdIndex++;
 				if (wdIndex >= 2)
 					wdIndex = 0;
-
 				try {
 					sendJson(KEY_Sendair, WD[wdIndex]);
 					imWD.setBackgroundResource(imaWD[wdIndex]);
@@ -374,7 +413,7 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 
 	private void vSimple() {
 		Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
-		vibrator.vibrate(60);
+		vibrator.vibrate(50);
 	}
 	
 	private void updbData(){

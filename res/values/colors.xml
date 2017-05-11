@@ -159,4 +159,7 @@
     <color name="gray4">#999999</color>
     <color name="gray5">#666666</color>
     <color name="gray6">#464646</color>
+    
+    <!-- 金色 -->
+    <color name="golden"> #FFFF00</color>
 </resources>

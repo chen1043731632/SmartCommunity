@@ -264,17 +264,24 @@ public class MainActivity extends GosControlModuleBaseActivity implements
     			thread=new StartThread();
     			thread.start();
     			thread.interrupt();
+    			initBroadcostData();
     		}
     		else{
     		  if(!firstmac.equals(device.getMacAddress())){//是否和上次在线设备一样。不一样则会重新启动服务
     			stopthread=new StopThread();
    				stopthread.start();
    				stopthread.interrupt();
-   				initBroadcostData();
+   				gasstua=false;
+   				smokestua=false;
+   				gatestua=false;
+   			 	bodystua=false;
+   			 	temperature="null";
+   			 	humidity="null";
     			firstmac =device.getMacAddress();
     			thread=new StartThread();
     			thread.start();
     			thread.interrupt();
+    			initBroadcostData();
     		}
 //    		  else if(data.getBooleanExtra("isresult", false)){
 //    			stopthread=new StopThread();

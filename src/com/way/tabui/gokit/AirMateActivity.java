@@ -91,7 +91,7 @@ public class AirMateActivity extends GosBaseActivity {
 		tv_brand = (TextView) findViewById(R.id.tv_brand);
 
 		bt_diybrand = (Button) findViewById(R.id.bt_diybrand);
-		ib_pre.setEnabled(false);
+	//	ib_pre.setEnabled(false);
 
 	}
 
@@ -124,12 +124,15 @@ public class AirMateActivity extends GosBaseActivity {
 				// TODO Auto-generated method stub
 
 				if (brand == min) {
-					ib_pre.setEnabled(false);
+					Toast.makeText(getApplicationContext(), "当前已经是第一个遥控码", Toast.LENGTH_SHORT).show();
+					//ib_pre.setEnabled(false);
+					//ib_pre.setVisibility(View.GONE);
 				} else {
 					brand--;
 					index--;
 					setProText();
-					ib_next.setEnabled(true);
+					//ib_next.setEnabled(true);
+					//ib_next.setVisibility(View.VISIBLE);
 				}
 			}
 		});
@@ -140,12 +143,15 @@ public class AirMateActivity extends GosBaseActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				if (brand == max) {
-					ib_next.setEnabled(false);
+					Toast.makeText(getApplicationContext(), "当前为最后一个遥控码", Toast.LENGTH_SHORT).show();
+					//ib_next.setEnabled(false);
+					//ib_next.setVisibility(View.GONE);
 				} else {
 					brand++;
 					index++;
 					setProText();
-					ib_pre.setEnabled(true);
+				//	ib_pre.setEnabled(true);
+					//ib_pre.setVisibility(View.VISIBLE);
 				}
 			}
 		});
@@ -160,10 +166,8 @@ public class AirMateActivity extends GosBaseActivity {
 				case MotionEvent.ACTION_DOWN:
 					// isonclick=false;
 					if (!isopen) {
-
 						isstart = true;
 						initTimer();
-						// myThread.start();
 						Log.i("==", "Thread is start");
 						isopen = true;
 					}
@@ -184,16 +188,7 @@ public class AirMateActivity extends GosBaseActivity {
 			}
 		});
 
-		// ib_ceshi.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// // TODO Auto-generated method stub
-		// isonclick=true;
-		// isstart=true;
-		// initTimer();
-		// }
-		// });
+	
 
 	}
 
@@ -283,13 +278,6 @@ public class AirMateActivity extends GosBaseActivity {
 				}
 				windex++;
 
-				// if(isonclick)
-				// {
-				// isstart=false;
-				// windex = 1;
-				// boundAlert(AirMateActivity.this);
-				// }
-
 				break;
 
 			case 4:
@@ -300,6 +288,7 @@ public class AirMateActivity extends GosBaseActivity {
 					setProText();
 				} else {
 					ib_next.setEnabled(false);
+					Toast.makeText(getApplicationContext(), "已经到最后一个遥控码", Toast.LENGTH_SHORT).show();
 				}
 				windex = 1;
 				break;
@@ -406,14 +395,14 @@ public class AirMateActivity extends GosBaseActivity {
 					handler.sendMessage(mas);
 					if (windex == 3) {
 						try {
-							Thread.sleep(1000);
+							Thread.sleep(1200);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							Log.i("==", "线程出错" + e.toString());
 						}
 					} else {
 						try {
-							Thread.sleep(500);
+							Thread.sleep(800);
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							Log.i("==", "线程出错" + e.toString());
@@ -440,7 +429,7 @@ public class AirMateActivity extends GosBaseActivity {
 
 	private void vSimple() {
 		Vibrator vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
-		vibrator.vibrate(60);
+		vibrator.vibrate(40);
 	}
 
 	@Override

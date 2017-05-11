@@ -1238,5 +1238,6 @@ UID：{4}"</string>
     <string name="title_activity_air_con_mes">设备列表</string>
     <string name="title_activity_air_con_brand">选择设备</string>
     <string name="title_activity_air_mate">配对设备</string>
+    <string name="title_activity_smart_curtain">智能窗帘</string>
 
 </resources>

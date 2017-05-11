@@ -477,7 +477,15 @@ public class GizService extends Service {
 		bulider.setContentTitle("接收到" + mestit + "报警消息");
 		bulider.setTicker("接到环泰智能家居提示消息");
 		bulider.setDefaults(Notification.DEFAULT_ALL);
+		bulider.setAutoCancel(true);
 		bulider.setContentText(mes);
+		Intent intent =new Intent(this,MainActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putParcelable("GizWifiDevice", device);
+		intent.putExtras(bundle);
+		intent.putExtra("isoffline",false);
+		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		bulider.setContentIntent(pi);
 		Notification notification = bulider.build();
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(id, notification);

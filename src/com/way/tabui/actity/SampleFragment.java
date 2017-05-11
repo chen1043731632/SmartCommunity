@@ -57,6 +57,7 @@ import com.way.tabui.gokit.AllMessageActivity;
 import com.way.tabui.gokit.PromailActivity;
 import com.way.tabui.gokit.R;
 import com.way.tabui.gokit.SmartAirConditionActivity;
+import com.way.tabui.gokit.SmartCurtainActivity;
 import com.way.tabui.settingsmodule.GosAboutActivity;
 import com.way.tabui.settingsmodule.GosSettiingsActivity;
 import com.way.util.DataCache;
@@ -740,6 +741,23 @@ public class SampleFragment extends Fragment {
 			startActivity(intent);
 			//}else
 		}
+		//窗帘
+		private void smart_curtain(){
+			spf = getActivity().getSharedPreferences(GosConstant.SPF_Name,
+					Context.MODE_PRIVATE);
+//			if (!getofisoffline()) {
+				Intent intent = new Intent(context,SmartCurtainActivity.class);
+//				Bundle bundle = new Bundle();
+//				bundle.putParcelable("GizWifiDevice",
+//						(GizWifiDevice) ((MainActivity) getActivity()).device);
+//				intent.putExtras(bundle);
+				startActivityForResult(intent, 1000);
+//			} else {
+//				Toast.makeText(context, "现在为离线状态，无法进入此功能界面..", Toast.LENGTH_SHORT)
+//						.show();
+//			}
+		}
+		
 		
 		/**
 		 * 作者：Jacky 时间：2017/1/14 16:35
@@ -812,6 +830,8 @@ public class SampleFragment extends Fragment {
 
 				else if (poem.get(location) == "缴费查询")
 					pro_jiaofei();
+				else if(poem.get(location) == "智能窗帘")
+					smart_curtain();
 				else {
 					Toast.makeText(context, "敬请期待", Toast.LENGTH_SHORT).show();
 				}

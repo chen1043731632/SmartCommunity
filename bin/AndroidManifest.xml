@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.way.tabui.gokit"
     android:versionCode="1"
-    android:versionName="1.1.5" >
+    android:versionName="1.2.0" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -245,12 +245,19 @@
             android:label="@string/title_activity_air_con_brand"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
-        
         <activity
             android:name=".AirMateActivity"
             android:label="@string/title_activity_air_mate"
             android:theme="@android:style/Theme.Holo.Light" >
         </activity>
+        <!-- 智能窗帘 -->
+           <activity
+            android:name=".SmartCurtainActivity"
+            android:label="@string/title_activity_smart_curtain" 
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+        
+        
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -589,7 +596,6 @@
 
 
         <!-- <activity android:name="com.way.tabui.controlmodule.GosColorsListActivity"></activity> -->
-        
-    </application>
+         </application>
 
 </manifest>
