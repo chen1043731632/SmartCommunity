@@ -71,6 +71,8 @@ public class SmartOCActivity extends GosControlModuleBaseActivity {
 	/** The isUpDateUi */
 	protected static boolean isUpDateUi = true;
 
+	protected static final int OPEN = 1;
+	protected static final int CLOSE = 0;
 	private TextView tv_nodevice;
 	private ListView smart_oc_listview;
 	private DatabaseAdapter dbAdapter;
@@ -212,36 +214,77 @@ public class SmartOCActivity extends GosControlModuleBaseActivity {
 	}
 
 	Gizinfo gizinfo;
-
-	private void initList() {
-		adapter = new SmartOCAdapter(SmartOCActivity.this, giz);
-		smart_oc_listview.setAdapter(adapter);
-		adapter.setOnClickListener(new MyClickListener() {
-			@Override
-			public void onTogButton(BaseAdapter adapter, View view, int position) {
-				// TODO Auto-generated method stub
-				//
+	
+	Handler handler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			super.handleMessage(msg);
+			int position =msg.arg1;;
+			switch (msg.what){
+			case OPEN:
 				try {
-					if (((Switch) view).isChecked())
-						sendJson(KEY_Sendcom, Integer.parseInt(giz
-								.get(position).getAddress()));
-					else
-						sendJson(KEY_Sendcom, Integer.parseInt(giz
-								.get(position).getAddress()) + 1);
-					Toast.makeText(getApplicationContext(), "已发送指令...",
+					sendJson(KEY_Sendcom, Integer.parseInt(giz
+							.get(position).getAddress()));
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					Toast.makeText(getApplicationContext(), "指令发送失败",
 							Toast.LENGTH_SHORT).show();
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					Toast.makeText(getApplicationContext(), "指令发送失败",
 							Toast.LENGTH_SHORT).show();
 				}
-
+				break;
+			case CLOSE:
+				try {
+					sendJson(KEY_Sendcom, Integer.parseInt(giz
+							.get(position).getAddress()) + 1);
+				} catch (NumberFormatException e) {
+					// TODO Auto-generated catch block
+					Toast.makeText(getApplicationContext(), "指令发送失败",
+							Toast.LENGTH_SHORT).show();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					Toast.makeText(getApplicationContext(), "指令发送失败",
+							Toast.LENGTH_SHORT).show();
+				}
+				break;
 			}
-		});
+		}
+		
+	};
+
+	private void initList() {
+		adapter = new SmartOCAdapter(SmartOCActivity.this, giz);
+		adapter.setHandler(handler);
+		smart_oc_listview.setAdapter(adapter);
+//		adapter.setOnClickListener(new MyClickListener() {
+//			@Override
+//			public void onTogButton(BaseAdapter adapter, View view, int position) {
+//				// TODO Auto-generated method stub
+//				//
+//				try {
+//					if (((Switch) view).isChecked())
+//						sendJson(KEY_Sendcom, Integer.parseInt(giz
+//								.get(position).getAddress()));
+//					else
+//						sendJson(KEY_Sendcom, Integer.parseInt(giz
+//								.get(position).getAddress()) + 1);
+//					Toast.makeText(getApplicationContext(), "已发送指令...",
+//							Toast.LENGTH_SHORT).show();
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					Toast.makeText(getApplicationContext(), "指令发送失败",
+//							Toast.LENGTH_SHORT).show();
+//				}
+//
+//			}
+//		});
 
 		progressDialog.cancel();
 
 	}
+	
+	
 
 	private void sendJson(String key, Object value) throws JSONException {
 		ConcurrentHashMap<String, Object> hashMap = new ConcurrentHashMap<String, Object>();

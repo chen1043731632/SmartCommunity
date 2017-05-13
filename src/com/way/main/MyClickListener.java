@@ -9,4 +9,5 @@ public interface MyClickListener {
 	public void onTogButton(BaseAdapter adapter,View view,int position);
 	
 
+
 }

@@ -3,9 +3,13 @@ package com.way.adapter;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -21,7 +25,14 @@ public class SmartOCAdapter extends BaseAdapter {
 	private ArrayList<Gizinfo> mList;
 	private MyClickListener mListener;
 
-
+	protected static final int OPEN = 1;
+	protected static final int CLOSE = 0;
+	Handler handler = new Handler();
+	
+	public void setHandler(Handler handler) {
+		this.handler = handler;
+	}
+	
 	public  SmartOCAdapter(Context mContext, ArrayList<Gizinfo> mList) {
 		this.mContext = mContext;
 		this.mList = mList;
@@ -50,7 +61,6 @@ public class SmartOCAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder viewHolder = null;
 		if (convertView == null) {
-
 			convertView = LinearLayout.inflate(mContext,
 					R.layout.listview_smart, null);
 			viewHolder = new ViewHolder();
@@ -61,7 +71,26 @@ public class SmartOCAdapter extends BaseAdapter {
 			viewHolder.btn_tog = (Switch) convertView
 					.findViewById(R.id.btn_tog);
 			viewHolder.btn_tog.setOnClickListener(mOnClickListener);
-		//	viewHolder.btn_tog.setOnCheckedChangeListener(listener)
+			final int index=position;
+			viewHolder.btn_tog.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				
+				@Override
+				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					// TODO Auto-generated method stub
+					if(isChecked){
+						Message message = new Message();
+						message.what = OPEN;
+						message.arg1=index;
+						handler.sendMessage(message);
+					}else{
+						Message message = new Message();
+						message.what = CLOSE;
+						message.arg1=index;
+						handler.sendMessage(message);
+					}
+				}
+			});
+			
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -92,5 +121,7 @@ public class SmartOCAdapter extends BaseAdapter {
 			}
 		}
 	};
+	
+
 
 }

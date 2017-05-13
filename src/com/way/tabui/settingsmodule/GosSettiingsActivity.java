@@ -93,10 +93,26 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 		llAbout.setOnClickListener(this);
 		llexit.setOnClickListener(this);
 		llsetbund.setOnClickListener(this);
-		sw_red.setOnClickListener(new OnClickListener() {
-
+//		sw_red.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				try {
+//					sendJson(KEY_RED_SWITCH, sw_red.isChecked());
+//					if(sw_red.isChecked()){
+//						Toast.makeText(getApplicationContext(), "请看网关测试灯是否亮起",Toast.LENGTH_SHORT ).show();
+//					}
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+		
+		sw_red.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
 			@Override
-			public void onClick(View v) {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				// TODO Auto-generated method stub
 				try {
 					sendJson(KEY_RED_SWITCH, sw_red.isChecked());
 					if(sw_red.isChecked()){
@@ -107,10 +123,10 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 				}
 			}
 		});
-		sw_sf.setOnClickListener(new OnClickListener() {
+		sw_sf.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
-			public void onClick(View v) {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				// TODO Auto-generated method stub
 				if(sw_sf.isChecked()){
 					spf.edit().putBoolean("issafe", true).commit();
@@ -121,6 +137,20 @@ public class GosSettiingsActivity extends GosBaseActivity implements
 				}
 			}
 		});
+//		sw_sf.setOnClickListener(new OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				if(sw_sf.isChecked()){
+//					spf.edit().putBoolean("issafe", true).commit();
+//					Toast.makeText(getApplicationContext(), "监听状态，可接收警报信息",Toast.LENGTH_SHORT ).show();
+//				}else{
+//					spf.edit().putBoolean("issafe", false).commit();
+//					Toast.makeText(getApplicationContext(), "撤防状态，不再接收警报信息",Toast.LENGTH_SHORT ).show();
+//				}
+//			}
+//		});
 		
 	}
 

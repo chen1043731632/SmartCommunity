@@ -479,6 +479,7 @@ public class GizService extends Service {
 		bulider.setDefaults(Notification.DEFAULT_ALL);
 		bulider.setAutoCancel(true);
 		bulider.setContentText(mes);
+		if(id!=0x020){
 		Intent intent =new Intent(this,MainActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putParcelable("GizWifiDevice", device);
@@ -486,6 +487,7 @@ public class GizService extends Service {
 		intent.putExtra("isoffline",false);
 		PendingIntent pi = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		bulider.setContentIntent(pi);
+		}
 		Notification notification = bulider.build();
 		NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		nm.notify(id, notification);

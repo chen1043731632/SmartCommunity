@@ -35,7 +35,7 @@ public class SmartAirConditionActivity extends GosBaseActivity {
 	private Button btOpCl;
 
 	/** 模式 0：制冷 1：抽湿 2：送风 3：制热  4:自动 */
-	private int[] MOD = { 327944, 328200, 324456, 328712,327688};
+	private int[] MOD = { 327944, 328200, 328456, 328712,327688};
 	/** 模式图片资源索引 0：制冷 1：抽湿 2：送风 3：制热  4:自动*/
 	private int[] imaMOD = { R.drawable.btn_mode_cold_black,
 			R.drawable.btn_mode_humidity_black,

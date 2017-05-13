@@ -288,25 +288,25 @@ public class SampleFragment extends Fragment {
 		if (!getofisoffline()) {
 			if (TextUtils.isEmpty(((MainActivity) getActivity()).device
 					.getAlias())) {
-				if(issafe){
+//				if(issafe){
 				title.setText(getArguments().getString(ARG_TEXT)
 						+ "-"
 						+ ((MainActivity) getActivity()).device
-								.getProductName()+"-监听-");
-				}else{
-					title.setText(getArguments().getString(ARG_TEXT)
-							+ "-"
-							+ ((MainActivity) getActivity()).device
-									.getProductName()+"-撤防-");
-				}
+								.getProductName());
+//				}else{
+//					title.setText(getArguments().getString(ARG_TEXT)
+//							+ "-"
+//							+ ((MainActivity) getActivity()).device
+//									.getProductName()+"-撤防-");
+//				}
 			} else {
-				if(issafe){
+//				if(issafe){
 				title.setText(getArguments().getString(ARG_TEXT) + "-"
-						+ ((MainActivity) getActivity()).device.getAlias()+"-监听-");
-				}else{
-					title.setText(getArguments().getString(ARG_TEXT) + "-"
-							+ ((MainActivity) getActivity()).device.getAlias()+"-撤防-");
-				}
+						+ ((MainActivity) getActivity()).device.getAlias());
+//				}else{
+//					title.setText(getArguments().getString(ARG_TEXT) + "-"
+//							+ ((MainActivity) getActivity()).device.getAlias()+"-撤防-");
+//				}
 			}
 		} else
 			title.setText(getArguments().getString(ARG_TEXT) + "-" + "网关离线中");
@@ -745,17 +745,17 @@ public class SampleFragment extends Fragment {
 		private void smart_curtain(){
 			spf = getActivity().getSharedPreferences(GosConstant.SPF_Name,
 					Context.MODE_PRIVATE);
-//			if (!getofisoffline()) {
+			if (!getofisoffline()) {
 				Intent intent = new Intent(context,SmartCurtainActivity.class);
-//				Bundle bundle = new Bundle();
-//				bundle.putParcelable("GizWifiDevice",
-//						(GizWifiDevice) ((MainActivity) getActivity()).device);
-//				intent.putExtras(bundle);
+				Bundle bundle = new Bundle();
+				bundle.putParcelable("GizWifiDevice",
+						(GizWifiDevice) ((MainActivity) getActivity()).device);
+				intent.putExtras(bundle);
 				startActivityForResult(intent, 1000);
-//			} else {
-//				Toast.makeText(context, "现在为离线状态，无法进入此功能界面..", Toast.LENGTH_SHORT)
-//						.show();
-//			}
+			} else {
+				Toast.makeText(context, "现在为离线状态，无法进入此功能界面..", Toast.LENGTH_SHORT)
+						.show();
+			}
 		}
 		
 		
