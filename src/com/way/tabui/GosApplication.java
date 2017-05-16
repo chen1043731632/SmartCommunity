@@ -3,6 +3,8 @@ package com.way.tabui;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
+
 import com.gizwits.gizwifisdk.api.GizWifiDevice;
 import com.gizwits.gizwifisdk.api.GizWifiSDK;
 import com.gizwits.gizwifisdk.enumration.GizPushType;
@@ -27,6 +29,7 @@ public class GosApplication extends Application {
 //		
 ////		setDevice(device);
 		spf = getSharedPreferences(GosConstant.SPF_Name, Context.MODE_PRIVATE);
+		
 		
 		try {
 			GosConstant.App_ID=spf.getString("appid", "a61ed92da3764cca848f3dbab8481149");
